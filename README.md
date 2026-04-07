@@ -67,7 +67,7 @@ This README serves as your primary documentation. **Fill out each section carefu
 
 ### Short Self Introduction
 
-> TODO — Replace this with a short 1–2 sentence introduction about yourself (name, what you study, one fun fact or interest).
+Hi all! I'm Anastasiia, a Master's Informatics student in 3rd semester. I'm also a DevOps Engineer with 3 years of development experience, but have never worked with Swift or iOS before. One fun fact about me is that I speak 5 languages fluently: Ukrainian and Russian as a native speaker, as well as English, German and Polish. And I'm currently on my way to mastering Spanish. Looking forward to this course!
 
 ### Problem Statement (max. 500 words)
 
