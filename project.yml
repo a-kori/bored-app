@@ -1,4 +1,4 @@
-name: IntrocourseApp # TODO: Adjust Name
+name: Bored
 settings:
   DEVELOPMENT_TEAM: T7PP2KY2B6
 packages:
@@ -7,20 +7,20 @@ packages:
     from: 1.3.0
 
 targets:
-  IntrocourseApp:  # TODO: Adjust Name  
+  Bored:
     type: application
     platform: iOS
     deploymentTarget:
       iOS: 18.0
     sources: 
-      - path: IntrocourseApp # TODO: Adjust Name 
+      - path: Bored
     scheme: {}
     dependencies:
       - package: SwiftCollections
         product: Collections
 
     info:
-      path: IntrocourseApp/Supporting/Info.plist # TODO: Adjust path if you rename the folder
+      path: Bored/Supporting/Info.plist
       properties:
         CFBundleDisplayName: $(DISPLAY_NAME)
         CFBundleLocalizations: [ en ]
@@ -30,10 +30,10 @@ targets:
           UIViewControllerBasedStatusBarAppearance: false
     settings:
       TARGETED_DEVICE_FAMILY: 1
-      PRODUCT_NAME: IntrocourseApp # TODO: Adjust app name
-      DISPLAY_NAME: IntrocourseApp # TODO: Adjust display name
-      INFOPLIST_FILE: IntrocourseApp/Supporting/Info.plist # TODO: Adjust path if you rename the folder
-      PRODUCT_BUNDLE_IDENTIFIER: de.tum.cit.ase.ios26.IntrocourseApp # TODO: Adjust app name
+      PRODUCT_NAME: Bored
+      DISPLAY_NAME: Bored
+      INFOPLIST_FILE: Bored/Supporting/Info.plist
+      PRODUCT_BUNDLE_IDENTIFIER: de.tum.cit.ase.ios26.Bored
       ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: 1
       ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
     postCompileScripts:
