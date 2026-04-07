@@ -67,21 +67,47 @@ This README serves as your primary documentation. **Fill out each section carefu
 
 ### Short Self Introduction
 
-Hi all! I'm Anastasiia, a Master's Informatics student in 3rd semester. I'm also a DevOps Engineer with 3 years of development experience, but have never worked with Swift or iOS before. One fun fact about me is that I speak 5 languages fluently: Ukrainian and Russian as a native speaker, as well as English, German and Polish. And I'm currently on my way to mastering Spanish. Looking forward to this course!
+Hi all! I'm Anastasiia, a Master's Informatics student in 3rd semester. I'm also a DevOps Engineer with 3 years of development experience, but have never worked with Swift or iOS before. One fun fact about me is that I speak 5 languages fluently: Ukrainian and Russian as a native speaker, as well as English, German and Polish. I'm looking forward to completing this course!
 
 ### Problem Statement (max. 500 words)
 
-> TODO: Add your problem statement here.
+<!-- TODO: Add your problem statement here. -->
+
+#### The Problem
+In an era of infinite digital connectivity, a paradoxical phenomenon has emerged: the more options we have for entertainment, the less likely we are to choose any of them. This is known as "The Paradox of Choice." When an individual finds themselves with a sudden window of free time — whether it’s a quiet Saturday afternoon or an hour between commitments — they are often met with a paralyzing "Decision Fatigue."
+
+Instead of engaging in fulfilling activities, many people default to "passive consumption," such as mindlessly scrolling through social media feeds or cycling through streaming service menus without ever hitting play. The problem isn't a lack of things to do: it is the cognitive load required to filter through dozens of possibilities, weigh their costs, and evaluate their social requirements in real-time.
+
+#### Who is Affected
+This problem primarily affects "Generation Digital" — students, freelancers and young professionals who are constantly bombarded by algorithmic suggestions but lack a simple, randomized tool for real-world spontaneous action. It also affects individuals who feel "stuck" in their routines and social groups who find themselves in a repetitive loop of going to the same locations.
+
+#### Why Solving it Matters
+Solving this problem is about more than just "curing boredom" - it is about mental well-being, finding hobbies and personal growth. Neuropsychological research suggests that novelty is a key driver of dopamine and neuroplasticity. By introducing a "randomized" element into a person’s day, we bypass the brain’s exhausted executive function.
+
+An app that provides just a few actionable suggestions based on simple constraints removes the friction of choice. It encourages users to step outside their comfort zones: whether that means starting a new DIY project, visiting a local park they’ve ignored or learning a niche skill. By transforming a digital interaction into a physical or social output, we can reclaim "lost time" and turn it into a source of genuine quality of life.
+
+#### The Solution
+The solution is a lightweight, context-aware iOS mobile application that acts as a decision engine. By allowing users to input their constraints (category, group/individual activity, home/outside activity etc.), the app filters out the noise. Instead of presenting an overwhelming list of options, the app utilizes a swipeable feed to present one highly relevant activity at a time. This deliberate friction-free design bypasses analysis paralysis, turning a tiring search for ideas into an immediate, seemless experience.
 
 ### Requirements
 
 #### Functional Requirements (User Stories)
 
-> TODO: List the user stories that your app fulfills. These should be added to the GitLab product backlog as issues. Discuss and refine them with your tutor.
+<!-- TODO: List the user stories that your app fulfills. These should be added to the GitLab product backlog as issues. Discuss and refine them with your tutor. -->
 
-- As a [user], I want to [action] so that [goal].
+- As a bored user, I want to get an immediate random activity suggestion once I open the app, so I don't have to think of one myself.
 
-**Example** (for an Expense Tracking App): As a [student], I want to [see all my monthly transactions] so that [I can make better financial decisions].
+- As a picky user, I want to be able to swipe back and forth through activity suggestions in a "feed"-like style to know my options and pick the one I like most.
+
+- As a motivated user, I want to save an activity to a "To-Do" list so I can remember to do it later if I can't do it right now.
+
+- As a mood-driven user, I want to filter activities by category (e.g., Education, Relaxation, Sports) so that the suggestion aligns with my current energy level.
+
+- As a user facing bad weather conditions, I want to be able to filter out activities I cannot do at home to only see suitable suggestions for me at the moment.
+
+- As a friend in a group, I want to specify the number of participants so that the app doesn't suggest solo activities when I'm with people.
+
+- As a user with limited internet, I want to see a clear error message if the API fails so that I know why the app isn't loading a new idea.
 
 #### Quality Attributes & External Constraints
 
