@@ -87,7 +87,7 @@ Solving this problem is about more than just "curing boredom" - it is about ment
 An app that provides just a few actionable suggestions based on simple constraints removes the friction of choice. It encourages users to step outside their comfort zones: whether that means starting a new DIY project, visiting a local park they’ve ignored or learning a niche skill. By transforming a digital interaction into a physical or social output, we can reclaim "lost time" and turn it into a source of genuine quality of life.
 
 #### The Solution
-The solution is a lightweight, context-aware iOS mobile application that acts as a decision engine. By allowing users to input their constraints (category, group/individual activity, home/outside activity etc.), the app filters out the noise. Instead of presenting an overwhelming list of options, the app utilizes a swipeable feed to present one highly relevant activity at a time. This deliberate friction-free design bypasses analysis paralysis, turning a tiring search for ideas into an immediate, seemless experience.
+The solution is a lightweight, context-aware iOS mobile application that acts as a decision engine. By allowing users to input their constraints (category, group/individual activity, short/long activity etc.), the app filters out the noise. Instead of presenting an overwhelming list of options, the app utilizes a swipeable activity board to present one highly relevant activity at a time. This deliberate friction-free design bypasses analysis paralysis, turning a tiring search for ideas into an immediate, seemless experience.
 
 ### Requirements
 
@@ -99,11 +99,11 @@ The solution is a lightweight, context-aware iOS mobile application that acts as
 
 - As a picky user, I want to be able to swipe back and forth through activity suggestions in a "feed"-like style to know my options and pick the one I like most.
 
-- As a motivated user, I want to save an activity to a "To-Do" list so I can remember to do it later if I can't do it right now.
+- As a motivated user, I want to save an activity to a Bookmark list so I can remember to do it later if I can't do it right now.
 
-- As a mood-driven user, I want to filter activities by category (e.g., Education, Relaxation, Sports) so that the suggestion aligns with my current energy level.
+- As a mood-driven user, I want to filter activities by category (e.g., Education, Relaxation, Social) so that the suggestion aligns with my current energy level.
 
-- As a user facing bad weather conditions, I want to be able to filter out activities I cannot do at home to only see suitable suggestions for me at the moment.
+- As a user with limited free time, I want to be able to filter out activities that take too long in order to only see suggestions matching my time constraints.
 
 - As a friend in a group, I want to specify the number of participants so that the app doesn't suggest solo activities when I'm with people.
 
@@ -198,12 +198,16 @@ Each subsection below must include:
 
 #### Glossary (Abbott's Analysis)
 
-> TODO: Define key terms and concepts used in your project. Clarify domain-specific language or abbreviations.
+<!-- TODO: Define key terms and concepts used in your project. Clarify domain-specific language or abbreviations. -->
 
 | Term | Definition |
-| ---- | ---------- |
-| *example:* Transaction | A record of money moving out of an account in exchange for a product or service. |
-| ... | ... |
+| :--- | :--- |
+| **Activity Board** | The primary interface for user's interactions with the app. A **lightweight** swipeable feed that **presents** users **randomized, immediate** free-time activity suggestions. Users can **swipe** to browse through options sequentially and **save** their favorites for later. |
+| **Activity** | A discrete, fulfilling action (e.g., DIY project, park visit) **presented** to the user as a call to action. The suggestions are designed to be **context-aware**, ensuring interactions remain relevant to the user’s current situation / constraints. |
+| **Filter Settings** | User-defined parameters (e.g., Category, Group size, Duration, Difficulty level) used as constraints to **filter out** irrelevant suggestions and ensure the suggestions provided are **context-aware**. |
+| **Bookmark** | A persistent storage container where the user can **save and view** activities they intend to perform later, keeping them **accessible and organized**. |
+
+---
 
 #### Analysis Object Model
 
