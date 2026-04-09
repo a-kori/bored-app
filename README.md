@@ -211,11 +211,8 @@ Each subsection below must include:
 
 #### Analysis Object Model
 
-> TODO: Add an analysis object model diagram showing relationships between key entities in your app.
+<!-- TODO: Add an analysis object model diagram showing relationships between key entities in your app. -->
 
-* **Instructions:** Create with [Apollon](https://apollon.aet.cit.tum.de) or the [Apollon VS Code extension](https://marketplace.visualstudio.com/items?itemName=aet-tum.apollon-extension), export as a **PNG or JPEG** and insert it directly (no links, **no SVG**).
-
-<!-- Replace the path below with the actual path to your exported AOM image -->
 ![Analysis Object Model](diagrams/aom.png)
 
 ### Architecture
