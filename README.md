@@ -224,17 +224,21 @@ Each subsection below must include:
 
 #### Subsystem Decomposition
 
-> TODO: Break down your app into its main subsystems (e.g., UI layer, networking, data/persistence, domain/logic, feature modules). Describe responsibilities, main data flows, and key dependencies. Include a diagram.
+<!-- TODO: Break down your app into its main subsystems (e.g., UI layer, networking, data/persistence, domain/logic, feature modules). Describe responsibilities, main data flows, and key dependencies. Include a diagram. -->
 
-* **Instructions:** Create a UML component diagram with [Apollon](https://apollon.aet.cit.tum.de) or the [Apollon VS Code extension](https://marketplace.visualstudio.com/items?itemName=aet-tum.apollon-extension), export as a **PNG or JPEG** (not SVG) and insert it below.
-
-<!-- Replace the path below with the actual path to your exported subsystem decomposition image -->
 ![Subsystem Decomposition](diagrams/subsystem_decomposition.png)
 
-* Subsystem A — responsibilities, key types, inbound/outbound data
-* Subsystem B — ...
-* ...
-
+- **Bored App UI** — renders the app's user interface and handles user interactions across four distinct screens.
+    - **Activity Feed View:** displays the main swipeable feed with activity suggestions and corresponding bookmark buttons; gets the activity data from the Activity Management.
+    - **Activity Creation View:** displays the necessary input fields to create a new activity; gets the activity model from the Activity Management.
+    - **Filter Settings View:** displays the necessary input fields to set/clear activity search parameters; gets the filter model from the Filter Management.
+    - **Bookmark View:** displays the list of persisted bookmarked activities; gets the bookmark data from the Bookmark Management.
+- **Bored App Server** — acts as the core business logic handler, coordinating activity feeds, managing filter states, and handling both the retrieval and creation of bookmarks. 
+    - **Filter Management**: enables setting and clearing activity search parameters (filters) in the internal model and propagates them to the Activity Management through the Filter Service.
+    - **Activity Management:** consumes the Filter Service and applies the filters to the activity fetching logic; sends requests to the Bored API using a REST/JSON interface to query activities; propagates bookmarked and newly created activities to the Bookmark Management through the Bookmark Service.
+    - **Bookmark Management:** manages the list of bookmarked activities and persists them in local storage at the end of each session; reads the list from local storage at the beginning of the session.
+- **Network** - manages all external communication, specifically fetching random activities from the Bored API, which responds to the Activity Management's HTTP REST queries and returns activity data in JSON format.
+- **Local Storage** - handles the local, persistent storage of the user's saved bookmarks, including custom-created activities; receives read, write, and delete commands along with bookmark data from the Bookmark Management component.
 ---
 
 *Replace all TODOs and keep this document current. It is both your planning guide and part of your final deliverable.*
