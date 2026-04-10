@@ -1,0 +1,610 @@
+{
+  "id": "f0c9fcbc-d141-470d-b46b-012cd1e9fc0a",
+  "version": "4.0.0",
+  "title": "Component Diagram",
+  "type": "ComponentDiagram",
+  "nodes": [
+    {
+      "id": "4b6e4f1f-577f-43bc-9c87-7899febd8001",
+      "width": 1490,
+      "height": 630,
+      "type": "componentSubsystem",
+      "position": {
+        "x": -220,
+        "y": 810
+      },
+      "data": {
+        "name": "Bored App",
+        "isComponentSubsystemHeaderShown": true
+      },
+      "measured": {
+        "width": 1490,
+        "height": 630
+      }
+    },
+    {
+      "id": "622bfdcd-0fc3-4c2b-8c48-bb6efbe88345",
+      "width": 190,
+      "height": 90,
+      "type": "component",
+      "position": {
+        "x": 580,
+        "y": 140
+      },
+      "parentId": "4b6e4f1f-577f-43bc-9c87-7899febd8001",
+      "data": {
+        "name": "Activity Management",
+        "isComponentHeaderShown": true,
+        "strokeColor": "#2bcbba"
+      },
+      "measured": {
+        "width": 190,
+        "height": 90
+      }
+    },
+    {
+      "id": "caa8ecc6-a87b-4cfc-b6b7-531a0336e5d4",
+      "width": 190,
+      "height": 90,
+      "type": "component",
+      "position": {
+        "x": 580,
+        "y": 460
+      },
+      "parentId": "4b6e4f1f-577f-43bc-9c87-7899febd8001",
+      "data": {
+        "name": "Filter Management",
+        "isComponentHeaderShown": true,
+        "strokeColor": "#26de81"
+      },
+      "measured": {
+        "width": 190,
+        "height": 90
+      }
+    },
+    {
+      "id": "336f71dd-a8bb-4ad1-baf5-f1dd060c18f2",
+      "width": 250,
+      "height": 220,
+      "type": "componentSubsystem",
+      "position": {
+        "x": 1200,
+        "y": 240
+      },
+      "parentId": "4b6e4f1f-577f-43bc-9c87-7899febd8001",
+      "data": {
+        "name": "Local Storage",
+        "isComponentSubsystemHeaderShown": true
+      },
+      "measured": {
+        "width": 250,
+        "height": 220
+      }
+    },
+    {
+      "id": "36f16f05-5064-4b1f-8577-96f7d2fd44c3",
+      "width": 190,
+      "height": 90,
+      "type": "component",
+      "position": {
+        "x": 30,
+        "y": 80
+      },
+      "parentId": "336f71dd-a8bb-4ad1-baf5-f1dd060c18f2",
+      "data": {
+        "name": "Bookmark Storage",
+        "isComponentHeaderShown": true,
+        "strokeColor": "#a55eea"
+      },
+      "measured": {
+        "width": 190,
+        "height": 90
+      }
+    },
+    {
+      "id": "abc556be-673f-4ebc-a16c-93d7c5fa219f",
+      "width": 30,
+      "height": 30,
+      "type": "componentInterface",
+      "position": {
+        "x": 730,
+        "y": 340
+      },
+      "parentId": "4b6e4f1f-577f-43bc-9c87-7899febd8001",
+      "data": {
+        "name": "Filter Service",
+        "textColor": "#fd9644"
+      },
+      "measured": {
+        "width": 30,
+        "height": 30
+      }
+    },
+    {
+      "id": "4eb83089-ec8f-406f-a4eb-0b823ae8216b",
+      "width": 250,
+      "height": 220,
+      "type": "componentSubsystem",
+      "position": {
+        "x": 1500,
+        "y": 870
+      },
+      "data": {
+        "name": "Network",
+        "isComponentSubsystemHeaderShown": true
+      },
+      "measured": {
+        "width": 250,
+        "height": 220
+      }
+    },
+    {
+      "id": "ce20d81d-54dd-4a1d-8c1d-8610c5ea06b5",
+      "width": 190,
+      "height": 90,
+      "type": "component",
+      "position": {
+        "x": 30,
+        "y": 80
+      },
+      "parentId": "4eb83089-ec8f-406f-a4eb-0b823ae8216b",
+      "data": {
+        "name": "Bored API",
+        "isComponentHeaderShown": true,
+        "strokeColor": "#2bcbba"
+      },
+      "measured": {
+        "width": 190,
+        "height": 90
+      }
+    },
+    {
+      "id": "57dd1563-20e0-4fbd-9ef3-571accd04093",
+      "width": 200,
+      "height": 50,
+      "type": "colorDescription",
+      "position": {
+        "x": 710,
+        "y": 1080
+      },
+      "data": {
+        "name": "includes activity creation"
+      },
+      "measured": {
+        "width": 200,
+        "height": 50
+      }
+    },
+    {
+      "id": "4344c80a-057b-41ec-91b7-3c3109a73857",
+      "width": 30,
+      "height": 30,
+      "type": "componentInterface",
+      "position": {
+        "x": 1300,
+        "y": 980
+      },
+      "data": {
+        "name": "REST/JSON Service",
+        "fillColor": "",
+        "textColor": "#fd9644"
+      },
+      "measured": {
+        "width": 30,
+        "height": 30
+      }
+    },
+    {
+      "id": "12e21882-28b8-43d7-a281-872d9f4d902b",
+      "width": 30,
+      "height": 30,
+      "type": "componentInterface",
+      "position": {
+        "x": 1080,
+        "y": 490
+      },
+      "parentId": "4b6e4f1f-577f-43bc-9c87-7899febd8001",
+      "data": {
+        "name": "Persistence Service",
+        "fillColor": "",
+        "textColor": "#fd9644"
+      },
+      "measured": {
+        "width": 30,
+        "height": 30
+      }
+    },
+    {
+      "id": "8cf5b2ca-0ca8-47f7-ba73-7dc992eb2578",
+      "width": 270,
+      "height": 540,
+      "type": "componentSubsystem",
+      "position": {
+        "x": -180,
+        "y": 870
+      },
+      "data": {
+        "name": "Bored App UI",
+        "isComponentSubsystemHeaderShown": true
+      },
+      "measured": {
+        "width": 270,
+        "height": 540
+      }
+    },
+    {
+      "id": "2dea1dc1-561b-4b9c-a469-129ddf866ea4",
+      "width": 190,
+      "height": 90,
+      "type": "component",
+      "position": {
+        "x": 40,
+        "y": 80
+      },
+      "parentId": "8cf5b2ca-0ca8-47f7-ba73-7dc992eb2578",
+      "data": {
+        "name": "Activity Feed View",
+        "isComponentHeaderShown": true,
+        "strokeColor": "#4b7bec"
+      },
+      "measured": {
+        "width": 190,
+        "height": 90
+      }
+    },
+    {
+      "id": "daa04e1f-5d01-4a31-acfe-aeb2c6ee5698",
+      "width": 190,
+      "height": 90,
+      "type": "component",
+      "position": {
+        "x": 40,
+        "y": 300
+      },
+      "parentId": "8cf5b2ca-0ca8-47f7-ba73-7dc992eb2578",
+      "data": {
+        "name": "Filter Settings View",
+        "isComponentHeaderShown": true,
+        "strokeColor": "#fc5c65"
+      },
+      "measured": {
+        "width": 190,
+        "height": 90
+      }
+    },
+    {
+      "id": "89c64fd6-74f3-4a7f-a9f0-8deee35ca0ed",
+      "width": 190,
+      "height": 90,
+      "type": "component",
+      "position": {
+        "x": 40,
+        "y": 410
+      },
+      "parentId": "8cf5b2ca-0ca8-47f7-ba73-7dc992eb2578",
+      "data": {
+        "name": "Bookmark View",
+        "isComponentHeaderShown": true,
+        "strokeColor": "#4b7bec"
+      },
+      "measured": {
+        "width": 190,
+        "height": 90
+      }
+    },
+    {
+      "id": "1309416a-c6f0-49d6-a953-e80672f52369",
+      "width": 190,
+      "height": 90,
+      "type": "component",
+      "position": {
+        "x": 40,
+        "y": 190
+      },
+      "parentId": "8cf5b2ca-0ca8-47f7-ba73-7dc992eb2578",
+      "data": {
+        "name": "Activity Creation View",
+        "isComponentHeaderShown": true,
+        "strokeColor": "#fc5c65"
+      },
+      "measured": {
+        "width": 190,
+        "height": 90
+      }
+    },
+    {
+      "id": "8f0ad5a8-834f-4292-a877-617a0aa97747",
+      "width": 30,
+      "height": 30,
+      "type": "componentInterface",
+      "position": {
+        "x": 110,
+        "y": 980
+      },
+      "data": {
+        "name": "Activity Data Service",
+        "fillColor": "",
+        "textColor": "#fd9644"
+      },
+      "measured": {
+        "width": 30,
+        "height": 30
+      }
+    },
+    {
+      "id": "dc83dc7c-2929-4359-809a-a933717c63dd",
+      "width": 30,
+      "height": 30,
+      "type": "componentInterface",
+      "position": {
+        "x": 110,
+        "y": 1200
+      },
+      "data": {
+        "name": "Filter Model Service",
+        "fillColor": "",
+        "textColor": "#fd9644"
+      },
+      "measured": {
+        "width": 30,
+        "height": 30
+      }
+    },
+    {
+      "id": "b6da919c-d2e9-4b8d-bf28-d86c02d78601",
+      "width": 30,
+      "height": 30,
+      "type": "componentInterface",
+      "position": {
+        "x": 110,
+        "y": 1310
+      },
+      "data": {
+        "name": "Bookmark Data Service",
+        "fillColor": "",
+        "textColor": "#fd9644"
+      },
+      "measured": {
+        "width": 30,
+        "height": 30
+      }
+    },
+    {
+      "id": "09c74ad2-fd92-4718-bd6a-c012a2b800cf",
+      "width": 30,
+      "height": 30,
+      "type": "componentInterface",
+      "position": {
+        "x": 110,
+        "y": 1090
+      },
+      "data": {
+        "name": "Activity Model Service",
+        "fillColor": "",
+        "textColor": "#fd9644"
+      },
+      "measured": {
+        "width": 30,
+        "height": 30
+      }
+    },
+    {
+      "id": "3de3e207-e667-49ea-9a6d-475085700a50",
+      "width": 190,
+      "height": 90,
+      "type": "component",
+      "position": {
+        "x": 840,
+        "y": 460
+      },
+      "parentId": "4b6e4f1f-577f-43bc-9c87-7899febd8001",
+      "data": {
+        "name": "Bookmark Management",
+        "isComponentHeaderShown": true,
+        "strokeColor": "#a55eea"
+      },
+      "measured": {
+        "width": 190,
+        "height": 90
+      }
+    },
+    {
+      "id": "578851cd-8ae3-4f76-a789-17acc97d0a63",
+      "width": 30,
+      "height": 30,
+      "type": "componentInterface",
+      "position": {
+        "x": 900,
+        "y": 340
+      },
+      "parentId": "4b6e4f1f-577f-43bc-9c87-7899febd8001",
+      "data": {
+        "name": "Bookmark Service",
+        "textColor": "#fd9644"
+      },
+      "measured": {
+        "width": 30,
+        "height": 30
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "b1b29d93-17e1-4c36-a707-66f8097d7f09",
+      "source": "caa8ecc6-a87b-4cfc-b6b7-531a0336e5d4",
+      "target": "abc556be-673f-4ebc-a16c-93d7c5fa219f",
+      "type": "ComponentProvidedInterface",
+      "sourceHandle": "top",
+      "targetHandle": "bottom",
+      "data": {
+        "points": []
+      }
+    },
+    {
+      "id": "6c09e4b3-6324-4f93-8c83-7893c95eaf60",
+      "source": "622bfdcd-0fc3-4c2b-8c48-bb6efbe88345",
+      "target": "abc556be-673f-4ebc-a16c-93d7c5fa219f",
+      "type": "ComponentRequiredInterface",
+      "sourceHandle": "bottom",
+      "targetHandle": "top",
+      "data": {
+        "points": []
+      }
+    },
+    {
+      "id": "95a51616-5ca5-4c4d-a27e-d81567869389",
+      "source": "622bfdcd-0fc3-4c2b-8c48-bb6efbe88345",
+      "target": "4344c80a-057b-41ec-91b7-3c3109a73857",
+      "type": "ComponentRequiredInterface",
+      "sourceHandle": "right",
+      "targetHandle": "left",
+      "data": {
+        "points": []
+      }
+    },
+    {
+      "id": "f6a2e85a-38b1-4f66-9931-b76c08c35135",
+      "source": "4344c80a-057b-41ec-91b7-3c3109a73857",
+      "target": "ce20d81d-54dd-4a1d-8c1d-8610c5ea06b5",
+      "type": "ComponentProvidedInterface",
+      "sourceHandle": "right",
+      "targetHandle": "left",
+      "data": {
+        "points": []
+      }
+    },
+    {
+      "id": "160fc2ed-36c6-4628-af6b-c2adbbe5943d",
+      "source": "36f16f05-5064-4b1f-8577-96f7d2fd44c3",
+      "target": "12e21882-28b8-43d7-a281-872d9f4d902b",
+      "type": "ComponentProvidedInterface",
+      "sourceHandle": "bottom",
+      "targetHandle": "right",
+      "data": {
+        "points": []
+      }
+    },
+    {
+      "id": "ca233b0e-3a8d-46a7-aaa4-a80f3273de26",
+      "source": "2dea1dc1-561b-4b9c-a469-129ddf866ea4",
+      "target": "8f0ad5a8-834f-4292-a877-617a0aa97747",
+      "type": "ComponentRequiredInterface",
+      "sourceHandle": "right",
+      "targetHandle": "left",
+      "data": {
+        "points": []
+      }
+    },
+    {
+      "id": "4fa8fce2-2425-41c2-9344-e562039e120c",
+      "source": "daa04e1f-5d01-4a31-acfe-aeb2c6ee5698",
+      "target": "dc83dc7c-2929-4359-809a-a933717c63dd",
+      "type": "ComponentRequiredInterface",
+      "sourceHandle": "right",
+      "targetHandle": "left",
+      "data": {
+        "points": []
+      }
+    },
+    {
+      "id": "58a7c0ae-0cab-4b3b-8c56-47eb039051d4",
+      "source": "89c64fd6-74f3-4a7f-a9f0-8deee35ca0ed",
+      "target": "b6da919c-d2e9-4b8d-bf28-d86c02d78601",
+      "type": "ComponentRequiredInterface",
+      "sourceHandle": "right",
+      "targetHandle": "left",
+      "data": {
+        "points": []
+      }
+    },
+    {
+      "id": "9a4517cf-b56f-4693-a1a6-aad3cc59022e",
+      "source": "dc83dc7c-2929-4359-809a-a933717c63dd",
+      "target": "caa8ecc6-a87b-4cfc-b6b7-531a0336e5d4",
+      "type": "ComponentProvidedInterface",
+      "sourceHandle": "right",
+      "targetHandle": "top-left",
+      "data": {
+        "points": []
+      }
+    },
+    {
+      "id": "c47b0e81-b5c2-4af8-941a-a384dc986709",
+      "source": "1309416a-c6f0-49d6-a953-e80672f52369",
+      "target": "09c74ad2-fd92-4718-bd6a-c012a2b800cf",
+      "type": "ComponentRequiredInterface",
+      "sourceHandle": "right",
+      "targetHandle": "left",
+      "data": {
+        "points": []
+      }
+    },
+    {
+      "id": "f462f8bc-2aee-4797-a4d2-8b39e0ca2b79",
+      "source": "09c74ad2-fd92-4718-bd6a-c012a2b800cf",
+      "target": "622bfdcd-0fc3-4c2b-8c48-bb6efbe88345",
+      "type": "ComponentProvidedInterface",
+      "sourceHandle": "right",
+      "targetHandle": "bottom-left",
+      "data": {
+        "points": []
+      }
+    },
+    {
+      "id": "95c0ed81-d4d4-4541-b941-92bad9310d9e",
+      "source": "3de3e207-e667-49ea-9a6d-475085700a50",
+      "target": "12e21882-28b8-43d7-a281-872d9f4d902b",
+      "type": "ComponentRequiredInterface",
+      "sourceHandle": "right",
+      "targetHandle": "left",
+      "data": {
+        "points": []
+      }
+    },
+    {
+      "id": "d197cebc-751e-4b36-b3c3-d3f62d586db4",
+      "source": "3de3e207-e667-49ea-9a6d-475085700a50",
+      "target": "578851cd-8ae3-4f76-a789-17acc97d0a63",
+      "type": "ComponentRequiredInterface",
+      "sourceHandle": "top",
+      "targetHandle": "bottom",
+      "data": {
+        "points": []
+      }
+    },
+    {
+      "id": "e9217ccb-0b4d-4dfc-841b-5aafe6e791e3",
+      "source": "578851cd-8ae3-4f76-a789-17acc97d0a63",
+      "target": "622bfdcd-0fc3-4c2b-8c48-bb6efbe88345",
+      "type": "ComponentProvidedInterface",
+      "sourceHandle": "top",
+      "targetHandle": "right-bottom",
+      "data": {
+        "points": []
+      }
+    },
+    {
+      "id": "d1ba1bb6-611a-48a6-acc0-10c1bc560ecf",
+      "source": "b6da919c-d2e9-4b8d-bf28-d86c02d78601",
+      "target": "3de3e207-e667-49ea-9a6d-475085700a50",
+      "type": "ComponentProvidedInterface",
+      "sourceHandle": "right",
+      "targetHandle": "bottom",
+      "data": {
+        "points": []
+      }
+    },
+    {
+      "id": "5580d67c-3324-49ad-8691-2923240adf16",
+      "source": "8f0ad5a8-834f-4292-a877-617a0aa97747",
+      "target": "622bfdcd-0fc3-4c2b-8c48-bb6efbe88345",
+      "type": "ComponentProvidedInterface",
+      "sourceHandle": "right",
+      "targetHandle": "left",
+      "data": {
+        "points": []
+      }
+    }
+  ],
+  "assessments": {}
+}
