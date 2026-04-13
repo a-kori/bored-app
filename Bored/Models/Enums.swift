@@ -15,12 +15,16 @@ enum ActivityType: String, Codable, CaseIterable {
 }
 
 enum ActivityLevel: String, Codable, CaseIterable {
-    case easy
-    case medium
-    case hard
+    case easy = "Few to no challenges"
+    case medium = "Minor challenges"
+    case hard = "Major challenges"
     
     var displayName: String {
-        self.rawValue.capitalized
+        switch self {
+        case .easy: return "Easy"
+        case .medium: return "Medium"
+        case .hard: return "Hard"
+        }
     }
 }
 
