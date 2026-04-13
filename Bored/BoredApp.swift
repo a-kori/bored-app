@@ -1,15 +1,14 @@
 //
-//  IntrocourseAppApp.swift
-//  IntrocourseApp
+//  BoredApp.swift
 //
 
 import SwiftUI
 
 @main
-struct IntrocourseAppApp: App {
+struct BoredApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ActivityBoardView()
         }
     }
 }
