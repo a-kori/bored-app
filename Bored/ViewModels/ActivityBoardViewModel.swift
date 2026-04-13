@@ -4,15 +4,14 @@ import OSLog
 
 @Observable
 class ActivityBoardViewModel {
-    // State properties for the UI
     var activityHistory: [Activity] = []
     var currentIndex: Int = 0
     var isLoading: Bool = false
-    
-    // FIX 1: Removed the redundant "= nil"
     var errorMessage: String?
     
-    // Dependencies
+    // NEW: Controls the popup alert for background fetch failures
+    var showErrorAlert: Bool = false 
+    
     private let apiService: BoredAPIServiceProtocol
     var currentFilters = FilterSettings()
     
@@ -20,32 +19,35 @@ class ActivityBoardViewModel {
         self.apiService = apiService
     }
     
-    // Computed property for easy access
     var currentActivity: Activity? {
-        // FIX 2: Moved 'return nil' to the next line
-        guard activityHistory.indices.contains(currentIndex) else {
-            return nil
+        guard activityHistory.indices.contains(currentIndex) else { 
+            return nil 
         }
         return activityHistory[currentIndex]
     }
     
     @MainActor
     func fetchNewActivity() async {
+        guard !isLoading else { return }
+        
         isLoading = true
         errorMessage = nil
         
         do {
             let newActivity = try await apiService.fetchActivity(with: currentFilters)
-            
-            // Append to history and update index to show the new card
             activityHistory.append(newActivity)
-            currentIndex = activityHistory.count - 1
-            
-            Logger.logic.info("Fetched new activity and added to history. Total count: \(self.activityHistory.count)")
+            Logger.logic.info("Fetched new activity. Total in history: \(self.activityHistory.count)")
         } catch let error as APIError {
             self.errorMessage = error.localizedDescription
+            // If the user already has history, pop up an alert instead of replacing the whole screen
+            if !activityHistory.isEmpty {
+                self.showErrorAlert = true
+            }
         } catch {
             self.errorMessage = "An unexpected error occurred. Please try again."
+            if !activityHistory.isEmpty {
+                self.showErrorAlert = true
+            }
         }
         
         isLoading = false
