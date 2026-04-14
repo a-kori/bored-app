@@ -5,7 +5,6 @@ struct ActivityCardView: View {
     
     var body: some View {
         VStack(spacing: 24) {
-            
             // 1. Activity Type Badge
             Text(activity.type.displayName.uppercased())
                 .font(.caption.weight(.bold))

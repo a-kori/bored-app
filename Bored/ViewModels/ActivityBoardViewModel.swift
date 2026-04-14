@@ -25,8 +25,9 @@ class ActivityBoardViewModel {
     
     @MainActor
     func fetchNewActivity() async {
-        guard !isLoading else { return }
-        
+        guard !isLoading else {
+            return
+        }
         isLoading = true
         errorMessage = nil
         

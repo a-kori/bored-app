@@ -86,7 +86,6 @@ struct ActivityBoardView: View {
     
     private var mainContentView: some View {
         TabView(selection: $viewModel.currentIndex) {
-            
             // 1. The Actual Activity Cards
             ForEach(Array(viewModel.activityHistory.enumerated()), id: \.element.id) { index, activity in
                 ActivityCardView(activity: activity)
