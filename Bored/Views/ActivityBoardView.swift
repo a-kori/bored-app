@@ -90,16 +90,17 @@ struct ActivityBoardView: View {
             }
             
             // 2. The Permanent "End of Line" Status Card
-            if !viewModel.activityHistory.isEmpty {
+            if viewModel.isLoading || viewModel.errorMessage != nil {
                 VStack(spacing: 24) {
                     if viewModel.isLoading {
+                        // Loading State
                         ProgressView()
                             .controlSize(.large)
                         Text("Fetching next idea...")
                             .font(.headline)
                             .foregroundColor(.secondary)
-                    } else {
-                        // If it's not loading, it means a fetch failed.
+                    } else if let error = viewModel.errorMessage {
+                        // Error State
                         Image(systemName: "exclamationmark.triangle.fill")
                             .font(.system(size: 40))
                             .foregroundColor(.orange)
@@ -107,13 +108,11 @@ struct ActivityBoardView: View {
                         Text("Fetch Failed")
                             .font(.title2.weight(.bold))
                         
-                        if let error = viewModel.errorMessage {
-                            Text(error)
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal, 16)
-                        }
+                        Text(error)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 16)
                         
                         Button("Try Again") {
                             Task {
