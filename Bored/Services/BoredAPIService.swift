@@ -73,6 +73,10 @@ struct BoredAPIService: BoredAPIServiceProtocol {
         } catch let error as APIError {
             throw error // Pass our custom errors through
         } catch {
+            if let rawString = String(data: data, encoding: .utf8) {
+                Logger.network.error("RAW JSON CRASH DUMP: \(rawString)")
+            }
+            
             Logger.network.error("Failed to decode JSON. Error: \(error.localizedDescription)")
             throw APIError.decodingError(error)
         }

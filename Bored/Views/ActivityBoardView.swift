@@ -42,7 +42,6 @@ struct ActivityBoardView: View {
                         await viewModel.fetchNewActivity()
                     }
                 }
-                Button("Cancel", role: .cancel) { }
             } message: { message in
                 Text(message)
             }
