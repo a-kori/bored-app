@@ -6,7 +6,7 @@ struct ActivityCardView: View {
     var body: some View {
         VStack(spacing: 24) {
             
-            // 1. Activity Type Badge (Brought back!)
+            // 1. Activity Type Badge
             Text(activity.type.displayName.uppercased())
                 .font(.caption.weight(.bold))
                 .foregroundColor(.blue)
@@ -27,11 +27,29 @@ struct ActivityCardView: View {
                 DetailPill(icon: "chart.bar.fill", text: activity.level.displayName)
                 DetailPill(icon: "clock.fill", text: activity.duration.displayName)
             }
+            
+            // 4. Conditional URL Button
+            // We check that the string exists, is not empty, AND forms a valid URL
+            if let urlString = activity.url, !urlString.isEmpty, let url = URL(string: urlString) {
+                Link(destination: url) {
+                    HStack {
+                        Text("Learn More")
+                        Image(systemName: "safari.fill")
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(.blue)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(Color.blue.opacity(0.1))
+                    .clipShape(Capsule())
+                }
+                .padding(.top, 8)
+            }
         }
         .padding(.horizontal, 32)
-        .padding(.vertical, 48) // Gives the card a solid, consistent size without taking up the whole screen
+        .padding(.vertical, 48)
         .frame(maxWidth: .infinity)
-        .background(Color(.secondarySystemBackground)) // HIG compliant background
+        .background(Color(.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
         .shadow(color: Color.black.opacity(0.08), radius: 12, x: 0, y: 6)
         .padding(.horizontal, 24)
@@ -62,7 +80,7 @@ struct DetailPill: View {
             level: .medium,
             duration: .hours,
             participants: 1,
-            url: nil
+            url: "https://en.wikipedia.org/wiki/Juggling"
         )
     )
 }
