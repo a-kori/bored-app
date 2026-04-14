@@ -24,6 +24,14 @@ class ActivityBoardViewModel {
     }
     
     @MainActor
+    func fetchInitialActivities() async {
+        await fetchNewActivity()
+        // Be polite to the free API to avoid rate limits
+        try? await Task.sleep(for: .seconds(0.5))
+        await fetchNewActivity()
+    }
+    
+    @MainActor
     func fetchNewActivity() async {
         guard !isLoading else {
             return

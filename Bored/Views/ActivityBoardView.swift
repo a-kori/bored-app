@@ -19,14 +19,13 @@ struct ActivityBoardView: View {
                         // Filter view action later
                     }) {
                         Image(systemName: "line.3.horizontal.decrease.circle")
+                            .accessibilityLabel("Filter activities")
                     }
                 }
             }
             .task {
                 if viewModel.activityHistory.isEmpty {
-                    await viewModel.fetchNewActivity()
-                    try? await Task.sleep(for: .seconds(0.5))
-                    await viewModel.fetchNewActivity()
+                    await viewModel.fetchInitialActivities()
                 }
             }
         }
@@ -78,9 +77,7 @@ struct ActivityBoardView: View {
             .containerRelativeFrame(.vertical)
         }
         .refreshable {
-            await viewModel.fetchNewActivity()
-            try? await Task.sleep(for: .seconds(0.5))
-            await viewModel.fetchNewActivity()
+            await viewModel.fetchInitialActivities()
         }
     }
     
@@ -102,7 +99,7 @@ struct ActivityBoardView: View {
                             .font(.headline)
                             .foregroundColor(.secondary)
                     } else {
-                        // If it's not loading, it means a fetch failed. Show the error cleanly!
+                        // If it's not loading, it means a fetch failed.
                         Image(systemName: "exclamationmark.triangle.fill")
                             .font(.system(size: 40))
                             .foregroundColor(.orange)
@@ -133,19 +130,17 @@ struct ActivityBoardView: View {
                 .background(Color(.secondarySystemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
                 .padding(.horizontal, 24)
-                .tag(viewModel.activityHistory.count) // Tagged so the user can always swipe to it
+                .tag(viewModel.activityHistory.count)
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .onChange(of: viewModel.currentIndex) { oldIndex, newIndex in
-            // Prefetch when they hit the last REAL card
+            // Prefetch when they hit the last real card
             if newIndex == viewModel.activityHistory.count - 1 && newIndex > oldIndex {
                 Task {
                     await viewModel.fetchNewActivity()
                 }
-            }
-            // Also trigger a fetch if they explicitly swipe to the End of Line card
-            else if newIndex == viewModel.activityHistory.count && !viewModel.isLoading {
+            } else if newIndex == viewModel.activityHistory.count && !viewModel.isLoading {
                 Task {
                     await viewModel.fetchNewActivity()
                 }
