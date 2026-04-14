@@ -39,6 +39,8 @@ enum ActivityDuration: String, Codable, CaseIterable {
     case minutes
     case hours
     case days
+    case weeks
+    case months
     
     var displayName: String {
         self.rawValue.capitalized
