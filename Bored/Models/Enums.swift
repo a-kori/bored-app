@@ -4,13 +4,20 @@ enum ActivityType: String, Codable, CaseIterable {
     case education
     case recreational
     case social
+    case diy
     case charity
     case cooking
     case relaxation
+    case music
     case busywork
     
     var displayName: String {
-        self.rawValue.capitalized
+        switch self {
+        case .diy:
+            return "DIY"
+        default:
+            return self.rawValue.capitalized
+        }
     }
 }
 

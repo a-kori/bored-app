@@ -17,7 +17,7 @@ enum APIError: LocalizedError {
         case .invalidResponse:
             return "Received an unexpected response from the server. Please try again."
         case .decodingError:
-            return "The app couldn't understand the server's response. Please try again."
+            return "The app couldn't understand the server's response. The API might have changed."
         case .noActivityFound:
             return "No activity found matching those exact filters. Try loosening your requirements!"
         case .rateLimitExceeded:
