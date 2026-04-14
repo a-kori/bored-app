@@ -16,34 +16,18 @@ struct ActivityBoardView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        // We will implement Navigation to FilterView in Step 4
+                        // Filter view action later
                     }) {
                         Image(systemName: "line.3.horizontal.decrease.circle")
                     }
                 }
             }
             .task {
-                // Initial Load: Prefetch the first two cards so the user can immediately swipe
                 if viewModel.activityHistory.isEmpty {
                     await viewModel.fetchNewActivity()
-                    // Be polite to the free API to avoid rate limits
                     try? await Task.sleep(for: .seconds(0.5))
                     await viewModel.fetchNewActivity()
                 }
-            }
-            // Alert overlay for background fetch errors
-            .alert(
-                "Fetch Failed",
-                isPresented: $viewModel.showErrorAlert,
-                presenting: viewModel.errorMessage
-            ) { _ in
-                Button("Try Again") {
-                    Task {
-                        await viewModel.fetchNewActivity()
-                    }
-                }
-            } message: { message in
-                Text(message)
             }
         }
     }
@@ -109,26 +93,60 @@ struct ActivityBoardView: View {
                     .tag(index)
             }
             
-            // 2. The Seamless "Ghost" Loading Card at the end of the line
-            if viewModel.isLoading && !viewModel.activityHistory.isEmpty {
+            // 2. The Permanent "End of Line" Status Card
+            if !viewModel.activityHistory.isEmpty {
                 VStack(spacing: 24) {
-                    ProgressView()
-                        .controlSize(.large)
-                    Text("Fetching next idea...")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .controlSize(.large)
+                        Text("Fetching next idea...")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                    } else {
+                        // If it's not loading, it means a fetch failed. Show the error cleanly!
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .font(.system(size: 40))
+                            .foregroundColor(.orange)
+                        
+                        Text("Fetch Failed")
+                            .font(.title2.weight(.bold))
+                        
+                        if let error = viewModel.errorMessage {
+                            Text(error)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 16)
+                        }
+                        
+                        Button("Try Again") {
+                            Task {
+                                await viewModel.fetchNewActivity()
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .clipShape(Capsule())
+                        .padding(.top, 8)
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 80)
                 .background(Color(.secondarySystemBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
                 .padding(.horizontal, 24)
-                .tag(viewModel.activityHistory.count)
+                .tag(viewModel.activityHistory.count) // Tagged so the user can always swipe to it
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .onChange(of: viewModel.currentIndex) { oldIndex, newIndex in
+            // Prefetch when they hit the last REAL card
             if newIndex == viewModel.activityHistory.count - 1 && newIndex > oldIndex {
+                Task {
+                    await viewModel.fetchNewActivity()
+                }
+            }
+            // Also trigger a fetch if they explicitly swipe to the End of Line card
+            else if newIndex == viewModel.activityHistory.count && !viewModel.isLoading {
                 Task {
                     await viewModel.fetchNewActivity()
                 }
