@@ -9,8 +9,8 @@ class ActivityBoardViewModel {
     var isLoading: Bool = false
     var errorMessage: String?
     
-    // NEW: Controls the popup alert for background fetch failures
-    var showErrorAlert: Bool = false 
+    // Controls the popup alert for background fetch failures
+    var showErrorAlert: Bool = false
     
     private let apiService: BoredAPIServiceProtocol
     var currentFilters = FilterSettings()
@@ -20,14 +20,15 @@ class ActivityBoardViewModel {
     }
     
     var currentActivity: Activity? {
-        guard activityHistory.indices.contains(currentIndex) else { 
-            return nil 
+        guard activityHistory.indices.contains(currentIndex) else {
+            return nil
         }
         return activityHistory[currentIndex]
     }
     
     @MainActor
     func fetchNewActivity() async {
+        // Prevent overlapping fetches
         guard !isLoading else { return }
         
         isLoading = true
@@ -39,7 +40,7 @@ class ActivityBoardViewModel {
             Logger.logic.info("Fetched new activity. Total in history: \(self.activityHistory.count)")
         } catch let error as APIError {
             self.errorMessage = error.localizedDescription
-            // If the user already has history, pop up an alert instead of replacing the whole screen
+            // If the user already has history, pop up an alert instead of taking over the screen
             if !activityHistory.isEmpty {
                 self.showErrorAlert = true
             }

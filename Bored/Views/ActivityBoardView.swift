@@ -16,19 +16,22 @@ struct ActivityBoardView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        // Filter view action later
+                        // We will implement Navigation to FilterView in Step 4
                     }) {
                         Image(systemName: "line.3.horizontal.decrease.circle")
                     }
                 }
             }
             .task {
+                // Initial Load: Prefetch the first two cards so the user can immediately swipe
                 if viewModel.activityHistory.isEmpty {
                     await viewModel.fetchNewActivity()
+                    // Be polite to the free API to avoid rate limits
+                    try? await Task.sleep(for: .seconds(0.5))
                     await viewModel.fetchNewActivity()
                 }
             }
-            // NEW: Alert overlay for background fetch errors
+            // Alert overlay for background fetch errors
             .alert(
                 "Fetch Failed",
                 isPresented: $viewModel.showErrorAlert,
@@ -59,7 +62,7 @@ struct ActivityBoardView: View {
                 .foregroundColor(.secondary)
         }
         .padding(.top, 16)
-        .padding(.bottom, 16) // Increased slightly to give the card some breathing room
+        .padding(.bottom, 16)
     }
     
     @ViewBuilder
@@ -93,27 +96,40 @@ struct ActivityBoardView: View {
         }
         .refreshable {
             await viewModel.fetchNewActivity()
+            try? await Task.sleep(for: .seconds(0.5))
             await viewModel.fetchNewActivity()
         }
     }
     
     private var mainContentView: some View {
         TabView(selection: $viewModel.currentIndex) {
+            
+            // 1. The Actual Activity Cards
             ForEach(Array(viewModel.activityHistory.enumerated()), id: \.element.id) { index, activity in
-                
-                // NEW: Wrapped in a VStack with a Spacer to push the card higher up
-                VStack {
-                    ActivityCardView(activity: activity)
-                        .padding(.top, 8)
-                    Spacer() 
+                ActivityCardView(activity: activity)
+                    .tag(index)
+            }
+            
+            // 2. The Seamless "Ghost" Loading Card at the end of the line
+            if viewModel.isLoading && !viewModel.activityHistory.isEmpty {
+                VStack(spacing: 24) {
+                    ProgressView()
+                        .controlSize(.large)
+                    Text("Fetching next idea...")
+                        .font(.headline)
+                        .foregroundColor(.secondary)
                 }
-                .tag(index)
-                
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 80)
+                .background(Color(.secondarySystemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
+                .padding(.horizontal, 24)
+                .tag(viewModel.activityHistory.count)
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
-        .onChange(of: viewModel.currentIndex) { _, newIndex in
-            if newIndex == viewModel.activityHistory.count - 1 {
+        .onChange(of: viewModel.currentIndex) { oldIndex, newIndex in
+            if newIndex == viewModel.activityHistory.count - 1 && newIndex > oldIndex {
                 Task {
                     await viewModel.fetchNewActivity()
                 }

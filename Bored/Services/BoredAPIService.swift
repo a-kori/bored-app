@@ -38,11 +38,14 @@ struct BoredAPIService: BoredAPIServiceProtocol {
             throw APIError.invalidResponse
         }
         
-        // The Bored API returns a 404 if no activity matches the requested filters.
-        // We catch this specifically to give the user a helpful "broaden your search" message.
         if httpResponse.statusCode == 404 {
             Logger.network.notice("No activity found for given filters.")
             throw APIError.noActivityFound
+        }
+        
+        if httpResponse.statusCode == 429 || httpResponse.statusCode == 502 || httpResponse.statusCode == 503 {
+            Logger.network.warning("Server rate limit or overload detected. Status code: \(httpResponse.statusCode)")
+            throw APIError.rateLimitExceeded
         }
         
         guard (200...299).contains(httpResponse.statusCode) else {
@@ -53,9 +56,22 @@ struct BoredAPIService: BoredAPIServiceProtocol {
         // 4. Decode JSON
         do {
             let decoder = JSONDecoder()
+            
+            if let errorResponse = try? decoder.decode([String: String].self, from: data), let apiErrorMessage = errorResponse["error"] {
+                Logger.network.warning("API returned a hidden error: \(apiErrorMessage)")
+                if apiErrorMessage.lowercased().contains("limit") {
+                    throw APIError.rateLimitExceeded
+                } else {
+                    throw APIError.noActivityFound
+                }
+            }
+            
+            // If no hidden error, decode normally
             let activity = try decoder.decode(Activity.self, from: data)
             Logger.network.info("Successfully fetched activity: \(activity.name) (ID: \(activity.id))")
             return activity
+        } catch let error as APIError {
+            throw error // Pass our custom errors through
         } catch {
             Logger.network.error("Failed to decode JSON. Error: \(error.localizedDescription)")
             throw APIError.decodingError(error)
