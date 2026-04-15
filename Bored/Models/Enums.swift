@@ -4,23 +4,34 @@ enum ActivityType: String, Codable, CaseIterable {
     case education
     case recreational
     case social
+    case diy
     case charity
     case cooking
     case relaxation
+    case music
     case busywork
     
     var displayName: String {
-        self.rawValue.capitalized
+        switch self {
+        case .diy:
+            return "DIY"
+        default:
+            return self.rawValue.capitalized
+        }
     }
 }
 
 enum ActivityLevel: String, Codable, CaseIterable {
-    case easy
-    case medium
-    case hard
+    case easy = "Few to no challenges"
+    case medium = "Minor challenges"
+    case hard = "Major challenges"
     
     var displayName: String {
-        self.rawValue.capitalized
+        switch self {
+        case .easy: return "Easy"
+        case .medium: return "Medium"
+        case .hard: return "Hard"
+        }
     }
 }
 
@@ -28,6 +39,8 @@ enum ActivityDuration: String, Codable, CaseIterable {
     case minutes
     case hours
     case days
+    case weeks
+    case months
     
     var displayName: String {
         self.rawValue.capitalized

@@ -6,6 +6,7 @@ enum APIError: LocalizedError {
     case invalidResponse
     case decodingError(Error)
     case noActivityFound
+    case rateLimitExceeded
     
     var errorDescription: String? {
         switch self {
@@ -19,6 +20,8 @@ enum APIError: LocalizedError {
             return "The app couldn't understand the server's response. The API might have changed."
         case .noActivityFound:
             return "No activity found matching those exact filters. Try loosening your requirements!"
+        case .rateLimitExceeded:
+            return "The server is getting too many requests! Please take a breather and try again in a few seconds."
         }
     }
 }
