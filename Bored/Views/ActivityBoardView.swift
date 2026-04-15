@@ -14,6 +14,13 @@ struct ActivityBoardView: View {
                 }
             }
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    NavigationLink(destination: BookmarkView()) {
+                        Image(systemName: "bookmark.fill")
+                            .accessibilityLabel("View saved activities")
+                    }
+                }
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         // Filter view action later
@@ -103,4 +110,5 @@ struct ActivityBoardView: View {
 
 #Preview {
     ActivityBoardView()
+    .environment(BookmarkViewModel())
 }

@@ -9,16 +9,6 @@ struct Activity: Identifiable, Codable, Equatable {
     let participants: Int
     let url: String?
 
-    var isBookmarked: Bool = false
-    
-    mutating func addBookmark() {
-        self.isBookmarked = true
-    }
-    
-    mutating func removeBookmark() {
-        self.isBookmarked = false
-    }
-    
     enum CodingKeys: String, CodingKey {
         case id = "key"
         case name = "activity"

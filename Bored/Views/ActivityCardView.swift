@@ -3,17 +3,38 @@ import SwiftUI
 struct ActivityCardView: View {
     let activity: Activity
     
+    @Environment(BookmarkViewModel.self) private var bookmarkViewModel
+    
     var body: some View {
         VStack(spacing: 24) {
-            // 1. Activity Type Badge
-            Text(activity.type.displayName)
-                .textCase(.uppercase)
-                .font(.caption.weight(.bold))
-                .foregroundStyle(.blue)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 6)
-                .background(Color.blue.opacity(0.15))
-                .clipShape(Capsule())
+            // 1. Top Row: Centered Badge and Trailing Bookmark
+            ZStack {
+                // The Badge stays perfectly centered
+                Text(activity.type.displayName)
+                    .textCase(.uppercase)
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(.blue)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 6)
+                    .background(Color.blue.opacity(0.15))
+                    .clipShape(Capsule())
+                
+                // The Button is pushed to the right edge of this row
+                HStack {
+                    Spacer()
+                    Button {
+                        bookmarkViewModel.toggleBookmark(for: activity)
+                    } label: {
+                        Image(systemName: bookmarkViewModel.isBookmarked(activity) ? "bookmark.fill" : "bookmark")
+                            .font(.title2)
+                            .foregroundStyle(bookmarkViewModel.isBookmarked(activity) ? .blue : .secondary)
+                            // A little padding makes it easier to tap without breaking the layout
+                            .padding(.leading, 12)
+                            .padding(.vertical, 8)
+                    }
+                    .accessibilityLabel(bookmarkViewModel.isBookmarked(activity) ? "Remove bookmark" : "Add bookmark")
+                }
+            }
             
             // 2. Main Activity Name
             Text(activity.name)
@@ -83,4 +104,5 @@ struct DetailPill: View {
             url: "https://en.wikipedia.org/wiki/Juggling"
         )
     )
+    .environment(BookmarkViewModel())
 }
