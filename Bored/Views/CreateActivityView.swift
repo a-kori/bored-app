@@ -57,7 +57,7 @@ struct CreateActivityView: View {
                         }
                     }
                     
-                    Picker("Category", selection: $type) {
+                    Picker("Category type", selection: $type) {
                         ForEach(ActivityType.allCases, id: \.self) { type in
                             Text(type.displayName).tag(type)
                         }
@@ -71,7 +71,7 @@ struct CreateActivityView: View {
                         }
                     }
                                         
-                    Picker("Difficulty", selection: $level) {
+                    Picker("Difficulty level", selection: $level) {
                         ForEach(ActivityLevel.allCases, id: \.self) { level in
                             Text(level.displayName).tag(level)
                         }
