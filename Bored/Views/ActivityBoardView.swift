@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ActivityBoardView: View {
     @State private var viewModel = ActivityBoardViewModel()
+    @State private var isShowingFilters = false
     
     var body: some View {
         NavigationStack {
@@ -23,9 +24,15 @@ struct ActivityBoardView: View {
 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        // Filter view action later
+                        isShowingFilters = true
                     }) {
-                        Image(systemName: "line.3.horizontal.decrease.circle")
+                        // Revert colors if filters are set
+                        Image(systemName: "line.3.horizontal.decrease")
+                            .font(.headline)
+                            .foregroundStyle(viewModel.currentFilters.isActive ? Color(.systemBackground) : .primary)
+                            .frame(width: 32, height: 32)
+                            .background(viewModel.currentFilters.isActive ? Color.primary : Color.clear)
+                            .clipShape(Circle())
                             .accessibilityLabel("Filter activities")
                     }
                 }
@@ -34,6 +41,17 @@ struct ActivityBoardView: View {
                 if viewModel.activityHistory.isEmpty {
                     await viewModel.fetchInitialActivities()
                 }
+            }
+            .sheet(isPresented: $isShowingFilters) {
+                FilterSettingsView(
+                    currentFilters: viewModel.currentFilters,
+                    onApply: { newFilters in
+                        Task {
+                            await viewModel.applyFilters(newFilters)
+                        }
+                    }
+                )
+                .presentationDetents([.medium, .large])
             }
         }
     }
@@ -82,12 +100,18 @@ struct ActivityBoardView: View {
             }
             
             // 2. The Permanent "End of Line" Status Card
-            if viewModel.isLoading || viewModel.errorMessage != nil {
-                EndOfLineCardView(
-                    isLoading: viewModel.isLoading,
-                    errorMessage: viewModel.errorMessage
-                ) {
-                    await viewModel.fetchNewActivity()
+            if viewModel.isLoading || viewModel.errorMessage != nil || viewModel.hasReachedEndOfFeed {
+                Group {
+                    if viewModel.hasReachedEndOfFeed {
+                        EndOfFeedCardView()
+                    } else {
+                        FetchFailedCardView(
+                            isLoading: viewModel.isLoading,
+                            errorMessage: viewModel.errorMessage
+                        ) {
+                            await viewModel.fetchNewActivity()
+                        }
+                    }
                 }
                 .tag(viewModel.activityHistory.count)
             }

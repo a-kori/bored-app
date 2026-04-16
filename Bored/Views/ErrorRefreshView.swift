@@ -18,3 +18,7 @@ struct ErrorRefreshView: View {
         }
     }
 }
+
+#Preview {
+    ErrorRefreshView(message: "We couldn't connect to the server. Please check your internet connection and try again.") {}
+}

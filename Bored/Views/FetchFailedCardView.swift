@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct EndOfLineCardView: View {
+struct FetchFailedCardView: View {
     let isLoading: Bool
     let errorMessage: String?
     let onTryAgain: () async -> Void
@@ -43,4 +43,18 @@ struct EndOfLineCardView: View {
         .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
         .padding(.horizontal, 24)
     }
+}
+
+#Preview("Loading State") {
+    FetchFailedCardView(
+        isLoading: true,
+        errorMessage: nil
+    ) {}
+}
+
+#Preview("Error State") {
+    FetchFailedCardView(
+        isLoading: false,
+        errorMessage: "You've seen all the activities for these filters! Try broadening your search."
+    ) {}
 }
