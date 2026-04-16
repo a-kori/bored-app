@@ -11,20 +11,24 @@ class BookmarkViewModel {
         self.bookmarkedActivities = storageService.loadBookmarks()
     }
     
+    func add(_ activity: Activity) {
+        guard !bookmarkedActivities.contains(where: { $0.id == activity.id }) else {
+            return
+        }
+        bookmarkedActivities.append(activity)
+        storageService.saveBookmarks(bookmarkedActivities)
+    }
+    
     func isBookmarked(_ activity: Activity) -> Bool {
         bookmarkedActivities.contains(where: { $0.id == activity.id })
     }
     
     func toggleBookmark(for activity: Activity) {
         if let index = bookmarkedActivities.firstIndex(where: { $0.id == activity.id }) {
-            // Remove if it already exists
             bookmarkedActivities.remove(at: index)
         } else {
-            // Add if it doesn't exist
             bookmarkedActivities.append(activity)
         }
-        
-        // Persist the changes
         storageService.saveBookmarks(bookmarkedActivities)
     }
     
