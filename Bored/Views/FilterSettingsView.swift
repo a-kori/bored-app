@@ -49,24 +49,16 @@ struct FilterSettingsView: View {
                         }
                     }
                 }
-                
-                if draftFilters.isActive {
-                    Section {
-                        Button("Reset All Filters") {
-                            draftFilters = FilterSettings()
-                        }
-                        .foregroundStyle(.red)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                }
             }
             .navigationTitle("Filters")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
+                    Button("Clear All") {
+                        draftFilters = FilterSettings()
                     }
+                    .tint(draftFilters.isActive ? .red : .secondary)
+                    .disabled(!draftFilters.isActive)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Apply") {

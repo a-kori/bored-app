@@ -1,38 +1,51 @@
 import SwiftUI
+import ConfettiSwiftUI
 
 struct ActivityCardView: View {
     let activity: Activity
     
+    private var themeColor: Color {
+        ColorHelper.color(for: activity.type)
+    }
+
     @Environment(BookmarkViewModel.self) private var bookmarkViewModel
+    @State private var confettiCounter = 0
     
     var body: some View {
         VStack(spacing: 24) {
             // 1. Top Row: Centered Badge and Trailing Bookmark
             ZStack {
-                // The Badge stays perfectly centered
                 Text(activity.type.displayName)
                     .textCase(.uppercase)
                     .font(.caption.weight(.bold))
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(themeColor)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 6)
-                    .background(Color.blue.opacity(0.15))
-                    .clipShape(Capsule())
+                    .background(themeColor.opacity(0.15), in: Capsule())
                 
-                // The Button is pushed to the right edge of this row
                 HStack {
                     Spacer()
                     Button {
                         bookmarkViewModel.toggleBookmark(for: activity)
+                        if bookmarkViewModel.isBookmarked(activity) {
+                            confettiCounter += 1
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        }
                     } label: {
                         Image(systemName: bookmarkViewModel.isBookmarked(activity) ? "bookmark.fill" : "bookmark")
                             .font(.title2)
-                            .foregroundStyle(bookmarkViewModel.isBookmarked(activity) ? .blue : .secondary)
-                            // A little padding makes it easier to tap without breaking the layout
+                            .foregroundStyle(bookmarkViewModel.isBookmarked(activity) ? themeColor : .secondary)
                             .padding(.leading, 12)
                             .padding(.vertical, 8)
                     }
                     .accessibilityLabel(bookmarkViewModel.isBookmarked(activity) ? "Remove bookmark" : "Add bookmark")
+                    .confettiCannon(
+                        counter: $confettiCounter,
+                        num: 30,
+                        colors: [.blue, .red, .green, .yellow, .pink, .purple],
+                        confettiSize: 10,
+                        radius: 60
+                    )
                 }
             }
             
@@ -50,7 +63,6 @@ struct ActivityCardView: View {
             }
             
             // 4. Conditional URL Button
-            // We check that the string exists, is not empty, AND forms a valid URL
             if let urlString = activity.url, !urlString.isEmpty, let url = URL(string: urlString) {
                 Link(destination: url) {
                     HStack {
@@ -61,8 +73,7 @@ struct ActivityCardView: View {
                     .foregroundStyle(.blue)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 10)
-                    .background(Color.blue.opacity(0.1))
-                    .clipShape(Capsule())
+                    .background(Color.blue.opacity(0.1), in: Capsule())
                 }
                 .padding(.top, 8)
             }
@@ -70,7 +81,12 @@ struct ActivityCardView: View {
         .padding(.horizontal, 32)
         .padding(.vertical, 48)
         .frame(maxWidth: .infinity)
-        .background(Color(.secondarySystemBackground))
+        .background {
+            ZStack {
+                Color(.secondarySystemBackground)
+                ColorHelper.background(for: activity.type)
+            }
+        }
         .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
         .shadow(color: Color.black.opacity(0.08), radius: 12, x: 0, y: 6)
         .padding(.horizontal, 24)
