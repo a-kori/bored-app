@@ -2,104 +2,121 @@ import Foundation
 import OSLog
 
 protocol BoredAPIServiceProtocol {
-    func fetchActivity(with filters: FilterSettings) async throws -> Activity
+    func fetchRandomActivity(excluding seenIDs: Set<String>) async throws -> Activity
+    func fetchFilteredActivity(with filters: FilterSettings, excluding seenIDs: Set<String>) async throws -> Activity
 }
 
 struct BoredAPIService: BoredAPIServiceProtocol {
-    private let baseURL = "https://bored-api.appbrewery.com/random"
+    private let randomURLString = "https://bored-api.appbrewery.com/random"
+    private let filterURLString = "https://bored-api.appbrewery.com/filter"
     
-    func fetchActivity(with filters: FilterSettings) async throws -> Activity {
-        // 1. Build URL
-        let url = try buildURL(with: filters)
-        Logger.network.info("Fetching activity from: \(url.absoluteString)")
+    // MARK: - 1. Fetch Random (Single Object)
+    
+    func fetchRandomActivity(excluding seenIDs: Set<String> = []) async throws -> Activity {
+        var attempts = 0
+        let maxAttempts = 5
         
-        // 2. Perform Request
-        let (data, response): (Data, URLResponse)
-        do {
-            (data, response) = try await URLSession.shared.data(from: url)
-        } catch {
-            Logger.network.error("Network request failed: \(error.localizedDescription)")
-            throw APIError.networkError(error)
+        guard let url = URL(string: randomURLString) else {
+            throw APIError.invalidURL
         }
         
-        // 3. Validate & Decode
-        try validate(response)
-        return try decode(data)
+        while attempts < maxAttempts {
+            attempts += 1
+            Logger.network.info("Fetching random activity... (Attempt \(attempts)/\(maxAttempts))")
+            
+            do {
+                let (data, response) = try await URLSession.shared.data(from: url)
+                try validate(response)
+                let safeData = try sanitize(data)
+                
+                let activity = try JSONDecoder().decode(Activity.self, from: safeData)
+                
+                if !seenIDs.contains(activity.id) {
+                    Logger.network.info("Successfully fetched random activity: \(activity.name)")
+                    return activity
+                } else {
+                    Logger.network.notice("Collision with seen activity. Retrying...")
+                }
+            } catch let error as APIError {
+                if case .rateLimitExceeded = error { throw error }
+            } catch {
+                throw APIError.networkError(error)
+            }
+        }
+        
+        Logger.logic.notice("Max retry attempts reached for random fetch.")
+        throw APIError.noActivityFound
     }
     
-    // MARK: - Helper Functions
+    // MARK: - 2. Fetch Filtered (Array of Objects)
     
-    private func buildURL(with filters: FilterSettings) throws -> URL {
-        guard var components = URLComponents(string: baseURL) else {
-            Logger.network.error("Failed to initialize URLComponents with base URL.")
+    func fetchFilteredActivity(with filters: FilterSettings, excluding seenIDs: Set<String> = []) async throws -> Activity {
+        Logger.network.info("Fetching filtered activities...")
+        
+        guard let filterURL = URL(string: filterURLString),
+              var components = URLComponents(url: filterURL, resolvingAgainstBaseURL: false) else {
             throw APIError.invalidURL
         }
         
         var queryItems: [URLQueryItem] = []
-        if let type = filters.type {
-            queryItems.append(URLQueryItem(name: "type", value: type.rawValue))
-        }
-        if let participants = filters.participants {
-            queryItems.append(URLQueryItem(name: "participants", value: String(participants)))
+        if let type = filters.type { queryItems.append(URLQueryItem(name: "type", value: type.rawValue)) }
+        if let participants = filters.participants { queryItems.append(URLQueryItem(name: "participants", value: String(participants.rawValue))) }
+        components.queryItems = queryItems
+        let url = components.url ?? filterURL
+        
+        let (data, response): (Data, URLResponse)
+        do {
+            (data, response) = try await URLSession.shared.data(from: url)
+        } catch {
+            throw APIError.networkError(error)
         }
         
-        if !queryItems.isEmpty {
-            components.queryItems = queryItems
-        }
+        try validate(response)
+        let safeData = try sanitize(data)
         
-        guard let url = components.url else {
-            Logger.network.error("Failed to construct final URL from components.")
-            throw APIError.invalidURL
-        }
-        return url
-    }
-    
-    private func validate(_ response: URLResponse) throws {
-        guard let httpResponse = response as? HTTPURLResponse else {
-            Logger.network.error("Response was not an HTTPURLResponse.")
-            throw APIError.invalidResponse
-        }
+        let allActivities = try JSONDecoder().decode([Activity].self, from: safeData)
         
-        if httpResponse.statusCode == 404 {
-            Logger.network.notice("No activity found for given filters.")
+        var validActivities = allActivities
+        if let level = filters.level { validActivities = validActivities.filter { $0.level == level } }
+        if let duration = filters.duration { validActivities = validActivities.filter { $0.duration == duration } }
+        
+        validActivities = validActivities.filter { !seenIDs.contains($0.id) }
+        
+        guard let finalActivity = validActivities.randomElement() else {
+            Logger.logic.notice("Pool exhausted. All \(allActivities.count) activities filtered out or seen.")
             throw APIError.noActivityFound
         }
         
-        if httpResponse.statusCode == 429 || httpResponse.statusCode == 502 || httpResponse.statusCode == 503 {
-            Logger.network.warning("Server rate limit or overload detected. Status code: \(httpResponse.statusCode)")
-            throw APIError.rateLimitExceeded
-        }
-        
-        guard (200...299).contains(httpResponse.statusCode) else {
-            Logger.network.error("Bad HTTP status code received: \(httpResponse.statusCode)")
-            throw APIError.invalidResponse
-        }
+        Logger.network.info("Successfully resolved final filtered activity: \(finalActivity.name)")
+        return finalActivity
     }
     
-    private func decode(_ data: Data) throws -> Activity {
-        do {
-            let decoder = JSONDecoder()
-            
-            if let errorResponse = try? decoder.decode([String: String].self, from: data), let apiErrorMessage = errorResponse["error"] {
-                Logger.network.warning("API returned a hidden error: \(apiErrorMessage)")
-                if apiErrorMessage.lowercased().contains("limit") {
-                    throw APIError.rateLimitExceeded
-                } else {
-                    throw APIError.noActivityFound
-                }
-            }
-            
-            let activity = try decoder.decode(Activity.self, from: data)
-            Logger.network.info("Successfully fetched activity: \(activity.name) (ID: \(activity.id))")
-            return activity
-        } catch let error as APIError {
-            throw error
-        } catch {
-            if let rawString = String(data: data, encoding: .utf8) {
-                Logger.network.error("RAW JSON CRASH DUMP: \(rawString)")
-            }
-            Logger.network.error("Failed to decode JSON. Error: \(error.localizedDescription)")
-            throw APIError.decodingError(error)
+    // MARK: - Shared Helpers
+    
+    private func validate(_ response: URLResponse) throws {
+        guard let httpResponse = response as? HTTPURLResponse else { throw APIError.invalidResponse }
+        if httpResponse.statusCode == 404 { throw APIError.noActivityFound }
+        if httpResponse.statusCode == 429 || httpResponse.statusCode == 502 || httpResponse.statusCode == 503 { throw APIError.rateLimitExceeded }
+        guard (200...299).contains(httpResponse.statusCode) else { throw APIError.invalidResponse }
+    }
+    
+    private func sanitize(_ data: Data) throws -> Data {
+        var safeData = data
+        if let rawString = String(data: data, encoding: .utf8) {
+            var cleaned = rawString.replacingOccurrences(of: "'\"", with: "\"")
+            cleaned = cleaned.replacingOccurrences(of: "\"'", with: "\"")
+            safeData = cleaned.data(using: .utf8) ?? data
         }
+        
+        if let errorResponse = try? JSONDecoder().decode([String: String].self, from: safeData),
+           let apiErrorMessage = errorResponse["error"] {
+            // Fixed Statement Position Violation: Multi-line formatting
+            if apiErrorMessage.lowercased().contains("limit") {
+                throw APIError.rateLimitExceeded
+            } else {
+                throw APIError.noActivityFound
+            }
+        }
+        return safeData
     }
 }

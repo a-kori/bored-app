@@ -5,9 +5,12 @@ import OSLog
 @Observable
 class ActivityBoardViewModel {
     var activityHistory: [Activity] = []
+    var seenActivityIDs: Set<String> = []
+    
     var currentIndex: Int = 0
     var isLoading: Bool = false
     var errorMessage: String?
+    var hasReachedEndOfFeed: Bool = false
     
     private let apiService: BoredAPIServiceProtocol
     var currentFilters = FilterSettings()
@@ -24,6 +27,21 @@ class ActivityBoardViewModel {
     }
     
     @MainActor
+    func applyFilters(_ newFilters: FilterSettings) async {
+        self.currentFilters = newFilters
+        
+        // Wipe the old history
+        self.activityHistory.removeAll()
+        self.seenActivityIDs.removeAll()
+        self.currentIndex = 0
+
+        // Fetch fresh data matching the new filters
+        self.errorMessage = nil
+        self.hasReachedEndOfFeed = false
+        await fetchInitialActivities()
+    }
+    
+    @MainActor
     func fetchInitialActivities() async {
         await fetchNewActivity()
         // Be polite to the free API to avoid rate limits
@@ -33,19 +51,32 @@ class ActivityBoardViewModel {
     
     @MainActor
     func fetchNewActivity() async {
-        guard !isLoading else {
+        // Abort if we are already loading or if we know the feed is empty
+        guard !isLoading && !hasReachedEndOfFeed else {
             return
         }
         isLoading = true
         errorMessage = nil
         
         do {
-            let newActivity = try await apiService.fetchActivity(with: currentFilters)
+            let newActivity: Activity
+            
+            // Routing logic based on filter state
+            if currentFilters.isActive {
+                newActivity = try await apiService.fetchFilteredActivity(with: currentFilters, excluding: seenActivityIDs)
+            } else {
+                newActivity = try await apiService.fetchRandomActivity(excluding: seenActivityIDs)
+            }
+            
             activityHistory.append(newActivity)
+            seenActivityIDs.insert(newActivity.id)
             
             // Cleanup mechanism to prevent infinite memory growth
             if activityHistory.count > 50 {
                 let itemsToRemove = activityHistory.count - 50
+                let removedActivities = activityHistory.prefix(itemsToRemove)
+                removedActivities.forEach { seenActivityIDs.remove($0.id) }
+                
                 activityHistory.removeFirst(itemsToRemove)
                 currentIndex -= itemsToRemove
             }
@@ -53,6 +84,16 @@ class ActivityBoardViewModel {
             Logger.logic.info("Fetched new activity. Total in history: \(self.activityHistory.count)")
         } catch let error as APIError {
             self.errorMessage = error.localizedDescription
+            if case .noActivityFound = error {
+                if currentFilters.isActive {
+                    if !activityHistory.isEmpty {
+                        self.errorMessage = "You've seen all the activities for these filters! Try broadening your search."
+                        self.hasReachedEndOfFeed = true
+                    }
+                } else {
+                    self.errorMessage = "We couldn't find any fresh activities right now. Try again later!"
+                }
+            }
         } catch {
             self.errorMessage = "An unexpected error occurred. Please try again."
         }
