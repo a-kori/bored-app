@@ -71,8 +71,6 @@ Hi all! I'm Anastasiia, a Master's Informatics student in 3rd semester. I'm also
 
 ### Problem Statement (max. 500 words)
 
-<!-- TODO: Add your problem statement here. -->
-
 #### The Problem
 In an era of infinite digital connectivity, a paradoxical phenomenon has emerged: the more options we have for entertainment, the less likely we are to choose any of them. This is known as "The Paradox of Choice." When an individual finds themselves with a sudden window of free time — whether it’s a quiet Saturday afternoon or an hour between commitments — they are often met with a paralyzing "Decision Fatigue."
 
@@ -95,8 +93,6 @@ Instead of presenting an overwhelming list of options, the app utilizes a swipea
 
 #### Functional Requirements (User Stories)
 
-<!-- TODO: List the user stories that your app fulfills. These should be added to the GitLab product backlog as issues. Discuss and refine them with your tutor. -->
-
 - As a bored user, I want to get an immediate random activity suggestion once I open the app, so I don't have to think of one myself.
 
 - As a picky user, I want to be able to swipe back and forth through activity suggestions in a "feed"-like style to know my options and pick the one I like most.
@@ -115,96 +111,142 @@ Instead of presenting an overwhelming list of options, the app utilizes a swipea
 
 - As a user with limited internet, I want to see a clear error message if the API fails so that I know why the app isn't loading a new idea.
 
+#### Requirement Coverage Snapshot
+
+- **At least 5 SwiftUI views in separate files with `#Preview`:** implemented in `Bored/Views/ActivityBoardView.swift`, `Bored/Views/BookmarkView.swift`, `Bored/Views/CreateActivityView.swift`, `Bored/Views/FilterSettingsView.swift`, `Bored/Views/ActivityCardView.swift`, `Bored/Views/FetchFailedCardView.swift`, `Bored/Views/ErrorRefreshView.swift`, and `Bored/Views/EndOfFeedCardView.swift`.
+- **Runtime data-driven UI (`ForEach`/`List`):**
+    - `ActivityBoardView` renders cards from API-fetched runtime data via `ForEach(Array(viewModel.activityHistory.enumerated()), ...)`.
+    - `BookmarkView` renders persisted/user-created runtime data via `List` + `ForEach(bookmarkViewModel.activeCategories, ...)` and `ForEach(items)`.
+- **At least 2 navigable screens:** `ActivityBoardView` and `BookmarkView` are separate screens connected by `NavigationStack` + `NavigationLink`.
+- **State-management architecture:** heavy logic is implemented in `@Observable` classes (`ActivityBoardViewModel`, `BookmarkViewModel`), while Views focus on layout/navigation/simple UI state (`@State`, `.sheet`, `.task`).
+- **Networking requirement:** fulfilled in `Bored/Services/BoredAPIService.swift` with async/await `URLSession.shared.data(from:)` against a public API.
+- **Persistence requirement:** meaningful user data (bookmarked and custom-created activities) is persisted in `UserDefaults` through `Bored/Services/LocalStorageService.swift` and survives app restarts.
+- **Loading and error UX:** loading indicators are shown with `ProgressView`, and failures are displayed with user-friendly copy via `ErrorRefreshView`, `FetchFailedCardView`, and `APIError.localizedDescription`.
+- **No networking in Views:** `URLSession` and decoding logic are isolated to the service layer (`BoredAPIService`), not in SwiftUI Views.
+- **Logging requirement:** `os.Logger` categories are implemented in `Bored/Utils/Logger+Extensions.swift` and used in services and view models.
+- **SPM package requirement:** Swift Package Manager dependencies are configured in `project.yml`. One external SPM packaged ([ConfettiSwiftUI](https://github.com/simibac/ConfettiSwiftUI.git)) was added to improve user experience.
+
 #### Quality Attributes & External Constraints
-
-> TODO: For **each** required quality attribute or constraint listed below, replace the placeholder with a **specific** description of how **your app** addresses it. You must name the **exact files, views, frameworks, or services** you used — generic statements like "followed Apple guidelines" or "used native components" are not sufficient.
-
-Each subsection below must include:
-1. **What you did** — the specific implementation (name the view, file, framework, or service)
-2. **Where to find it** — a link to the file or a screenshot
-3. **Any follow-up work** — what you would improve with more time
-
----
 
 ##### Human Interface Guidelines (HIG)
 
-> TODO: Describe **specific** HIG decisions you made. Do not write "I followed Apple's HIG."
->
-> **Good example:**
-> - Navigation uses `NavigationStack` with a tab bar (`TabView`) for the three main sections (Expenses, Budget, Settings) — see `MainTabView.swift`
-> - All icons are SF Symbols (`chart.bar.fill`, `gearshape`) to match iOS conventions
-> - Touch targets are at least 44×44pt; spacing follows 8pt grid — see `ExpenseRowView.swift`
-> - Destructive actions (delete expense) use `.destructive` role with a confirmation dialog — see `ExpenseDetailView.swift`
->
-> **Bad example** (do not do this):
-> - "I followed Apple's Human Interface Guidelines to make the app intuitive and visually consistent with iOS design."
+- **What I did:**
+    - Used `NavigationStack` for clear hierarchy and `NavigationLink` for navigation from the main feed to saved activities.
+    - Used SF Symbols throughout the app (for example `bookmark.fill`, `line.3.horizontal.decrease`, `person.fill`, `clock.fill`, `exclamationmark.triangle.fill`, `safari.fill`) to align with iOS visual language.
+    - Relied on native controls (`Form`, `List`, `ContentUnavailableView`, `ProgressView`, `.sheet`) to preserve expected iOS interaction patterns and accessibility behavior.
+    - Applied a strong visual hierarchy in cards: activity name as primary focus, metadata as secondary pills, optional link as tertiary action.
+    - Kept interactions touch-friendly with rounded tap targets and `.contentShape(Rectangle())` in expandable section headers.
+- **Where to find it:**
+    - `Bored/Views/ActivityBoardView.swift`
+    - `Bored/Views/BookmarkView.swift`
+    - `Bored/Views/ActivityCardView.swift`
+    - `Bored/Views/CreateActivityView.swift`
+- **Follow-up work:**
+    - Add dedicated VoiceOver walkthrough documentation and Dynamic Type XXL screenshots.
+    - Add a confirmation step for destructive delete actions.
 
 ##### Dark Mode
 
-> TODO: Explain how your app supports dark mode. Name the specific approach.
->
-> **Good example:**
-> - All colors use semantic system colors (`Color.primary`, `Color(.systemBackground)`) — no hardcoded hex values
-> - Custom accent color defined in `Assets.xcassets/AccentColor` with light/dark variants
-> - Verified in Simulator by toggling Appearance in Settings — screenshot below:
->   ![Dark mode screenshot](screenshots/dark_mode.png)
->
-> **Bad example:** "My app supports dark mode."
+- **What I did:**
+    - Used semantic/adaptive colors in key views: `Color(.systemBackground)`, `Color(.secondarySystemBackground)`, `.foregroundStyle(.primary)`, and `.foregroundStyle(.secondary)`.
+    - Kept app accent color in the asset catalog at `Bored/Assets.xcassets/AccentColor.colorset/Contents.json`.
+    - Implemented category-based styling in `ColorHelper.background(for:)` with low opacity so cards remain legible in both light and dark mode.
+- **Where to find it:**
+    - `Bored/Views/ActivityBoardView.swift`
+    - `Bored/Views/ActivityCardView.swift`
+    - `Bored/Utils/ColorHelper.swift`
+    - `Bored/Assets.xcassets/AccentColor.colorset/Contents.json`
+    - Dark mode screenshots: `screenshots/ActivityDark-1.png`, `screenshots/BookmarkDark-1.png`, `screenshots/FilterDark.png`
+- **Follow-up work:**
+    - Run a contrast audit and tune a few saturated accents for even better readability in dark mode.
 
 ##### Persistence
 
-> TODO: Explain what data your app persists and how.
->
-> **Good example:**
-> - User expenses are stored using SwiftData with a `@Model` class `Expense` in `Models/Expense.swift`
-> - The model container is injected at the app root in `ExpenseTrackerApp.swift`
-> - Data survives app restarts — verified by adding an expense, force-quitting, and relaunching
+- **What I did:**
+    - Persisted meaningful user data: both bookmarked API activities and user-created activities.
+    - Implemented persistence in `LocalStorageService` using `JSONEncoder`/`JSONDecoder` + `UserDefaults` key `saved_bookmarks`.
+    - Loaded persisted state in `BookmarkViewModel.init()` and saved state on add/toggle/delete/reorder.
+- **Where to find it:**
+    - `Bored/Services/LocalStorageService.swift`
+    - `Bored/ViewModels/BookmarkViewModel.swift`
+    - `Bored/Views/CreateActivityView.swift`
+- **Follow-up work:**
+    - Migrate bookmarks to SwiftData to support richer local queries and future model migrations.
 
 ##### Responsiveness
 
-> TODO: Explain how your app stays responsive during long-running operations.
->
-> **Good example:**
-> - Network requests to the exchange-rate API use `async/await` in `ExchangeRateService.swift` so the UI never freezes
-> - A `ProgressView` is shown while loading data — see `DashboardView.swift:42`
+- **What I did:**
+    - Used async/await networking in `BoredAPIService`, which keeps fetch work off the main thread.
+    - Exposed loading state through `ActivityBoardViewModel.isLoading` and surfaced it with `ProgressView` during first load and pagination.
+    - Added prefetch logic on feed index change so the next card is prepared before the user reaches the end.
+- **Where to find it:**
+    - `Bored/Services/BoredAPIService.swift`
+    - `Bored/ViewModels/ActivityBoardViewModel.swift`
+    - `Bored/Views/ActivityBoardView.swift`
+    - `Bored/Views/FetchFailedCardView.swift`
+- **Follow-up work:**
+    - Add cancellation/debouncing for very fast filter changes and profile request latency with signposts.
 
 ##### Error Handling
 
-> TODO: Explain how your app handles errors.
->
-> **Good example:**
-> - Network errors are caught in `ExchangeRateService.swift` and surfaced to the user via an `.alert` modifier in `DashboardView.swift`
-> - If the API is unreachable, the app shows cached data with a banner "Showing offline data" — see `OfflineBanner.swift`
+- **What I did:**
+    - Centralized error semantics in `APIError` with user-facing `LocalizedError` strings.
+    - Mapped HTTP/transport failures in `BoredAPIService` (`invalidResponse`, `rateLimitExceeded`, `noActivityFound`, `networkError`).
+    - Converted service errors into UI-safe messages in `ActivityBoardViewModel` and displayed recovery UI with retry actions.
+- **Where to find it:**
+    - `Bored/Services/APIError.swift`
+    - `Bored/Services/BoredAPIService.swift`
+    - `Bored/ViewModels/ActivityBoardViewModel.swift`
+    - `Bored/Views/ErrorRefreshView.swift`
+    - `Bored/Views/FetchFailedCardView.swift`
+- **Follow-up work:**
+    - Add an offline fallback cache for the last successful feed page.
 
 ##### Logging
 
-> TODO: Explain how your app uses logging.
->
-> **Good example:**
-> - Using `os.Logger` with a subsystem matching my bundle identifier (e.g., `de.tum.cit.ase.ios26.ExpenseTracker`) and categories per feature (e.g., `Logger(subsystem:category:)` for "Networking", "Persistence")
-> - Key events logged: API call start/success/failure in `ExchangeRateService.swift`, SwiftData save errors in `Expense.swift`
+- **What I did:**
+    - Implemented structured logging with `os.Logger` and feature categories (`network`, `logic`) in a shared extension.
+    - Logged API lifecycle events (attempt, success, retries, exhaustion) and persistence outcomes (save/load success, encoding/decoding failures).
+- **Where to find it:**
+    - `Bored/Utils/Logger+Extensions.swift`
+    - `Bored/Services/BoredAPIService.swift`
+    - `Bored/Services/LocalStorageService.swift`
+    - `Bored/ViewModels/ActivityBoardViewModel.swift`
+- **Follow-up work:**
+    - Enrich logs with request duration and filter metadata for easier production diagnostics.
+    - Save logs in JSON format to enable formal querying in the future.
+
+##### Code Quality
+
+- **What I did:**
+    - Kept networking/decoding outside Views and inside services/view models to preserve separation of concerns.
+    - Followed Swift naming/API style conventions (clear verb-based methods like `fetchInitialActivities`, `toggleBookmark`, `loadBookmarks`, `saveBookmarks`; expressive enum/value names for domain models).
+    - Used `os.Logger` for diagnostics and removed `print()` usage from app source files.
+    - Kept source clean from commented-out implementation blocks; comments that remain explain non-obvious design choices (prefetching, retry behavior, in-category reorder mapping).
+    - Enforced linting via project build script (`SwiftLint` in `project.yml`) and verified current codebase status.
+- **Where to find it:**
+    - `project.yml`
+    - `Bored/Services/BoredAPIService.swift`
+    - `Bored/ViewModels/ActivityBoardViewModel.swift`
+    - `Bored/ViewModels/BookmarkViewModel.swift`
+    - `Bored/Services/LocalStorageService.swift`
+- **Verification result:**
+    - `swiftlint --strict` reports `0 violations` and `0 serious` across 19 Swift files.
+- **Follow-up work:**
+    - Add unit tests for `BoredAPIService` response sanitization and `BookmarkViewModel` reorder/delete logic.
 
 ##### Responsible AI Usage
 
-> TODO: List the AI tools you used and describe on a high level how you used them. Generic statements like "I used AI to help with coding" are not acceptable.
->
-> For each tool, tell us: **what tool and model**, **what you used it for**, and **how you made sure the output was correct**.
->
-> Common tools: Xcode Coding Intelligence, Claude Code (Opus 4.6), GitHub Copilot, Cursor, ChatGPT (GPT-5.4), Windsurf
->
-> **Good example:**
-> - **Xcode Coding Intelligence (Claude):** Used for code completion and generating SwiftUI views. Reviewed all suggestions before accepting — caught a few cases where it used deprecated modifiers.
-> - **Claude Code (Opus 4.6):** Used to scaffold the networking layer and debug SwiftData issues. Always reviewed the generated code and tested manually in the Simulator.
-> - **GitHub Copilot:** Used for code generation and refactoring suggestions. Reviewed all changes before accepting — rejected suggestions that didn't follow the project's architecture.
->
-> **Bad example** (do not do this):
-> - "I used ChatGPT to support the design and coding process. All outputs were carefully reviewed."
+- **Gemini (Pro Model via Web UI):** 
+    - **What I used it for:** advanced UI refactoring, specifically resolving tricky layout bugs related to SwiftUI `TabView` interactions inside sheets and `ZStack` floating headers. Also used it to format SwiftLint `closure_body_length` violations by abstracting UI components into variables.
+    - **How I made sure it was correct:** manually reviewed the suggestions against Apple's guidelines. I challenged the AI when outputs resulted in bad UI/UX practices, guiding it to natively compliant HIG solutions. Tested UI layouts across differently sized simulators (iPhone SE vs. iPhone Pro Max) to ensure responsiveness.
+- **GitHub Copilot Chat (GPT-5.3-Codex):**
+    - **What I used it for:** improving this README with concrete implementation mapping.
+    - **How I made sure it was correct:** manually reviewed each suggested diff.
 
 ---
 
 #### Glossary (Abbott's Analysis)
-
-<!-- TODO: Define key terms and concepts used in your project. Clarify domain-specific language or abbreviations. -->
 
 | Term | Definition |
 | :--- | :--- |
@@ -216,15 +258,11 @@ Each subsection below must include:
 
 #### Analysis Object Model
 
-<!-- TODO: Add an analysis object model diagram showing relationships between key entities in your app. -->
-
 ![Analysis Object Model](diagrams/aom.png)
 
 ### Architecture
 
 #### Subsystem Decomposition
-
-<!-- TODO: Break down your app into its main subsystems (e.g., UI layer, networking, data/persistence, domain/logic, feature modules). Describe responsibilities, main data flows, and key dependencies. Include a diagram. -->
 
 ![Subsystem Decomposition](diagrams/subsystem_decomposition.png)
 
@@ -239,6 +277,3 @@ Each subsection below must include:
     - **Bookmark Management:** manages the list of bookmarked activities and persists them in local storage at the end of each session; reads the list from local storage at the beginning of the session.
 - **Network** - manages all external communication, specifically fetching random activities from the Bored API, which responds to the Activity Management's HTTP REST queries and returns activity data in JSON format.
 - **Local Storage** - handles the local, persistent storage of the user's saved bookmarks, including custom-created activities; receives read, write, and delete commands along with bookmark data from the Bookmark Management component.
----
-
-*Replace all TODOs and keep this document current. It is both your planning guide and part of your final deliverable.*
