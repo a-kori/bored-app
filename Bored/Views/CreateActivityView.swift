@@ -47,8 +47,8 @@ struct CreateActivityView: View {
                     VStack(alignment: .leading) {
                         TextField("URL (Optional)", text: $urlString)
                             .keyboardType(.URL)
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
+                            .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
                         
                         if !urlString.isEmpty && !isURLValid {
                             Text("Please enter a valid link (e.g., example.com)")
