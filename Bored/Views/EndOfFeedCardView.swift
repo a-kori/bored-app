@@ -7,8 +7,7 @@ struct EndOfFeedCardView: View {
                 .font(.largeTitle.weight(.bold))
                 .foregroundStyle(.white)
                 .frame(width: 80, height: 80)
-                .background(Color.green.gradient)
-                .clipShape(Circle())
+                .background(Color.green.gradient, in: Circle())
                 .shadow(color: .green.opacity(0.3), radius: 12, x: 0, y: 6)
             
             Text("You're all caught up!")

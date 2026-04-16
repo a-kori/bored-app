@@ -6,13 +6,14 @@ struct ActivityBoardView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .top) {
+            ZStack {
                 Color(.systemBackground).ignoresSafeArea()
-                
-                VStack(spacing: 0) {
+                contentArea
+                VStack {
                     headerView
-                    contentArea
+                    Spacer()
                 }
+                .zIndex(1)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -31,8 +32,7 @@ struct ActivityBoardView: View {
                             .font(.headline)
                             .foregroundStyle(viewModel.currentFilters.isActive ? Color(.systemBackground) : .primary)
                             .frame(width: 32, height: 32)
-                            .background(viewModel.currentFilters.isActive ? Color.primary : Color.clear)
-                            .clipShape(Circle())
+                            .background(viewModel.currentFilters.isActive ? Color.primary : Color.clear, in: Circle())
                             .accessibilityLabel("Filter activities")
                     }
                 }
