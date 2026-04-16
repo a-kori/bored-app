@@ -2,6 +2,7 @@ import SwiftUI
 
 struct BookmarkView: View {
     @Environment(BookmarkViewModel.self) private var bookmarkViewModel
+    @State private var isShowingCreateSheet = false
     
     var body: some View {
         Group {
@@ -9,7 +10,7 @@ struct BookmarkView: View {
                 ContentUnavailableView(
                     "No Bookmarks",
                     systemImage: "bookmark.slash",
-                    description: Text("Activities you save will appear here.")
+                    description: Text("Activities you save or create will appear here.")
                 )
             } else {
                 List {
@@ -75,6 +76,22 @@ struct BookmarkView: View {
         }
         .navigationTitle("Saved Ideas")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: {
+                    isShowingCreateSheet = true
+                }) {
+                    Image(systemName: "plus")
+                        .font(.headline)
+                        .accessibilityLabel("Create custom activity")
+                }
+            }
+        }
+        .sheet(isPresented: $isShowingCreateSheet) {
+            CreateActivityView { newActivity in
+                bookmarkViewModel.add(newActivity)
+            }
+        }
     }
 }
 
