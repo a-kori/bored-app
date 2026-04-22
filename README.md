@@ -1,6 +1,6 @@
 # iPraktikum 2026: Bored App
 
-Welcome on **Bored**! For [TUM's iPraktikum](https://aet.cit.tum.de/projects/courses/ipraktikum/) course in the summer semester 2026, I built this small iOS app to get familiar with Swift and the basics of iOS development. The app makes free-time activity suggestions to bored users using App Brewery's [Bored API](https://bored-api.appbrewery.com/). It displays them in a swipeable activity feed and allows you to filter, create and bookmark suggestions. Feel free to try it out on Xcode!
+Welcome on **Bored**! For [TUM's iPraktikum](https://aet.cit.tum.de/projects/courses/ipraktikum/) intro course in the summer semester 2026, I built this small iOS app to get familiar with Swift and the basics of iOS development. The app makes free-time activity suggestions to bored users using App Brewery's [Bored API](https://bored-api.appbrewery.com/). It displays them in a swipeable activity feed and allows you to filter, create and bookmark suggestions. Feel free to try it out on Xcode!
 
 See the Bored App pitch [here](https://docs.google.com/presentation/d/1nwyZ1IFpkkA1n9EGVJE3uOFfknhHr1x5Uq2lz56wDT4/edit?usp=sharing).
 
