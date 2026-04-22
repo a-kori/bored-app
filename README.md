@@ -1,12 +1,42 @@
 # iPraktikum 2026: Bored App
 
-Welcome on Bored! During [TUM's iPraktikum](https://aet.cit.tum.de/projects/courses/ipraktikum/) course in the summer 2026, I built this iOS app to get familiar with Swift and the basics of iOS development. The app makes free-time activity suggestions to bored users using App Brewery's [Bored API](https://bored-api.appbrewery.com/). It displays them in a swipeable activity feed and allows you to filter, create and bookmark suggestions. Feel free to try it out!
+Welcome on **Bored**! For [TUM's iPraktikum](https://aet.cit.tum.de/projects/courses/ipraktikum/) course in the summer semester 2026, I built this small iOS app to get familiar with Swift and the basics of iOS development. The app makes free-time activity suggestions to bored users using App Brewery's [Bored API](https://bored-api.appbrewery.com/). It displays them in a swipeable activity feed and allows you to filter, create and bookmark suggestions. Feel free to try it out on Xcode!
 
 See the Bored App pitch [here](https://docs.google.com/presentation/d/1nwyZ1IFpkkA1n9EGVJE3uOFfknhHr1x5Uq2lz56wDT4/edit?usp=sharing).
 
+<img src="screenshots/ActivityLight-2.png" alt="Activity suggestion in light mode" width="25%" /><img src="screenshots/ActivityDarkBM-1.png" alt="Activity suggestion in dark mode, bookmarked" width="25.5%" /><img src="screenshots/ActivityLightBM-2.png" alt="Activity suggestion with a link attached in light mode, bookmarked" width="26.2%" />
+
+<img src="screenshots/FilterLight.png" alt="Filter Settings" width="24.8%" /><img src="screenshots/BookmarkLight-1.png" alt="Saved Ideas" width="26.5%" /><img src="screenshots/CreateLight.png" alt="Activity Creation Form" width="25%" />
+
+## Local Development
+
+To test or further develop the Bored App, you can use XcodeGen and manage this project on Xcode.
+
+**What is XcodeGen?** XcodeGen is a tool that automatically generates Xcode project files from a simple configuration file. Instead of manually managing complex Xcode project settings, you define your project structure in the provided `project.yml` file, and XcodeGen creates the `.xcodeproj` file for you. This makes it easier to manage your Xcode project under version control (git), and resolve any merge conflicts that arise.
+
+**Why do you need this?** When you clone this repository, you won't find a ready-to-use `.xcodeproj` file, which you can directly open with Xcode. Instead, you'll find a `project.yml` configuration file that describes how the Xcode project should be set up. You need to generate the actual Xcode project file before you can open and work on the app in Xcode.
+
+1. Install tools (if you don't have [Homebrew](https://brew.sh), install it first)
+    ```bash
+    brew install xcodegen swiftlint
+    ```
+2. Generate .xcodeproj
+    ```bash
+    xcodegen generate
+    ```
+
+    After running this command, you'll see a new `.xcodeproj` file appear in your project folder. You can then double-click this file to open your project in Xcode.
+
+Since the `xcodegen generate` command must be run when the project is cloned and whenever changes affect the project structure, you can enable Git hooks to run the command automatically after merges and pulls.
+
+Run the following command to point `git` to the hooks:
+```bash
+git config core.hooksPath .githooks
+```
+
 ## Project Documentation
 
-This section contains the project's full problem statement, requirements documentation and supporting UML diagrams.
+This section contains the project's full problem statement, architecture and requirements documentation.
 
 ### Problem Statement
 
@@ -48,15 +78,9 @@ Instead of presenting an overwhelming list of options, the app utilizes a swipea
 
 - As a user with limited internet, I want to see a clear error message if the API fails so that I know why the app isn't loading a new idea.
 
+---
+
 ### Architecture
-
-#### Glossary (Abbott's Analysis)
-
-| Term | Definition |
-| :--- | :--- |
-| **Activity Board** | The primary interface for user's interactions with the app. A **lightweight** swipeable feed that **presents** users **randomized, immediate** free-time activity suggestions. Users can **swipe** to browse through options sequentially, **create** their own activities and **save** their favorites for later. |
-| **Activity** | A discrete, fulfilling action (e.g., DIY project, park visit) **presented** to the user as a suggestion. These are designed to be **context-aware**, ensuring interactions remain relevant to the user’s current situation. Once **bookmarked**, an activity is persisted on the device, enabling the user to come back and **view saved** activities across sessions. |
-| **Filter Settings** | User-defined parameters (e.g., Category, Group size, Duration, Difficulty level) used as constraints to **filter out** irrelevant suggestions and ensure the suggestions provided are **context-aware**. |
 
 #### Analysis Object Model (UML Class Diagram)
 
@@ -77,6 +101,16 @@ Instead of presenting an overwhelming list of options, the app utilizes a swipea
     - **Bookmark Management:** manages the list of bookmarked activities and persists them in local storage at the end of each session; reads the list from local storage at the beginning of the session.
 - **Network** - manages all external communication, specifically fetching random activities from the Bored API, which responds to the Activity Management's HTTP REST queries and returns activity data in JSON format.
 - **Local Storage** - handles the local, persistent storage of the user's saved bookmarks, including custom-created activities; receives read, write, and delete commands along with bookmark data from the Bookmark Management component.
+
+#### Glossary (Abbott's Analysis)
+
+| Term | Definition |
+| :--- | :--- |
+| **Activity Board** | The primary interface for user's interactions with the app. A **lightweight** swipeable feed that **presents** users **randomized, immediate** free-time activity suggestions. Users can **swipe** to browse through options sequentially, **create** their own activities and **save** their favorites for later. |
+| **Activity** | A discrete, fulfilling action (e.g., DIY project, park visit) **presented** to the user as a suggestion. These are designed to be **context-aware**, ensuring interactions remain relevant to the user’s current situation. Once **bookmarked**, an activity is persisted on the device, enabling the user to come back and **view saved** activities across sessions. |
+| **Filter Settings** | User-defined parameters (e.g., Category, Group size, Duration, Difficulty level) used as constraints to **filter out** irrelevant suggestions and ensure the suggestions provided are **context-aware**. |
+
+---
 
 ### Requirements
 
