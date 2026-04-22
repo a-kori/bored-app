@@ -1,75 +1,14 @@
-# Anastasiia Korzhylova's Intro Course App
+# iPraktikum 2026: Bored App
 
-Welcome to your project repository! To pass the intro course, you will build a unique iOS app using SwiftUI. There are no limitations on the app's functionality — be as creative as you like. Your app must, however, satisfy the **quality attributes & external constraints** specified in the course materials.
+Welcome on Bored! During [TUM's iPraktikum](https://aet.cit.tum.de/projects/courses/ipraktikum/) course in the summer 2026, I built this iOS app to get familiar with Swift and the basics of iOS development. The app makes free-time activity suggestions to bored users using App Brewery's [Bored API](https://bored-api.appbrewery.com/). It displays them in a swipeable activity feed and allows you to filter, create and bookmark suggestions. Feel free to try it out!
 
-## Local Development
-
-For your Intro Course App, you will use XcodeGen to manage your Xcode Project.
-
-**What is XcodeGen?** XcodeGen is a tool that automatically generates Xcode project files from a simple configuration file. Instead of manually managing complex Xcode project settings, you define your project structure in the provided `project.yml` file, and XcodeGen creates the `.xcodeproj` file for you. This makes it easier to manage your Xcode project under version control (git), and resolve any merge conflicts that arise.
-
-**Why do we need this?** When you clone this repository, you won't find a ready-to-use `.xcodeproj` file, which you can directly open with Xcode. Instead, you'll find a `project.yml` configuration file that describes how the Xcode project should be set up. You need to generate the actual Xcode project file before you can open and work on the app in Xcode.
-
-1. Install tools (if you don't have [Homebrew](https://brew.sh), install it first)
-    ```bash
-    brew install xcodegen swiftlint
-    ```
-2. Generate .xcodeproj
-    ```bash
-    xcodegen generate
-    ```
-
-    After running this command, you'll see a new `.xcodeproj` file appear in your project folder. You can then double-click this file to open your project in Xcode.
-
-Since the `xcodegen generate` command must be run when the project is cloned and whenever changes affect the project structure, you can enable Git hooks to run the command automatically after merges and pulls.
-
-Run the following command to point `git` to the hooks:
-```bash
-git config core.hooksPath .githooks
-```
-
-## Submission Procedure
-
-1. **Personal Repository**
-   You have been given a personal repository on GitLab to work on your app.
-
-2. **Issue-Based Development**
-
-    * Follow the issue-based development process from the Git Basics and Software Engineering sessions.
-    * **Every code change must start with a GitLab issue.** Do not write code without a corresponding issue.
-    * Inside the issue, click the dropdown arrow next to **Create merge request** and select **Create branch**. Confirm that **Source branch = `main`** and let GitLab generate the feature-branch name so the branch stays linked to the issue.
-    * After GitLab creates the branch, sync your local repo and check out that branch:
-
-     ```bash
-     git fetch origin
-     git checkout <branch-name>
-     ```
-
-3. **Merge Requests (MRs)**
-
-   * For each completed issue / task, open an **MR targeting `main`** (source: your feature branch → target: `main`).
-   * Prefix your MR title with `Draft:` (e.g. `Draft: #5: Add persistence layer`). While in Draft status, fill out the MR description and complete your work. Only **mark the MR as ready** when it is fully complete and ready for review.
-   * Add your tutor as a reviewer and collaborate on requested changes. Respond to feedback promptly.
-   * When the MR is ready, **let your tutor know** (in person or via Slack) — don't just wait silently.
-   * Keep MRs focused and small where possible; ensure CI/build checks are green.
-   * **Do not commit directly to `main`.** Use MRs only.
-   * It is **your responsibility to press "Merge"** once the MR is approved.
-
-**Deadline:** **2026-04-17 18:00**
-
-**All MRs must be merged into `main` by the deadline.** The version on `main` at the deadline is considered your final submission. Your app must satisfy all required **quality attributes & external constraints**. During the first four days there are intermediate deadlines for software engineering artifacts to help you stay on track.
-
----
+See the Bored App pitch [here](https://docs.google.com/presentation/d/1nwyZ1IFpkkA1n9EGVJE3uOFfknhHr1x5Uq2lz56wDT4/edit?usp=sharing).
 
 ## Project Documentation
 
-This README serves as your primary documentation. **Fill out each section carefully** — vague or generic content will not be accepted. Each section below contains guidance in blockquotes (>) with examples. **Replace all blockquotes with your own content.**
+This section contains the project's full problem statement, requirements documentation and supporting UML diagrams.
 
-### Short Self Introduction
-
-Hi all! I'm Anastasiia, a Master's Informatics student in 3rd semester. I'm also a DevOps Engineer with 3 years of development experience, but have never worked with Swift or iOS before. One fun fact about me is that I speak 5 languages fluently: Ukrainian and Russian as a native speaker, as well as English, German and Polish. I'm looking forward to completing this course!
-
-### Problem Statement (max. 500 words)
+### Problem Statement
 
 #### The Problem
 In an era of infinite digital connectivity, a paradoxical phenomenon has emerged: the more options we have for entertainment, the less likely we are to choose any of them. This is known as "The Paradox of Choice." When an individual finds themselves with a sudden window of free time — whether it’s a quiet Saturday afternoon or an hour between commitments — they are often met with a paralyzing "Decision Fatigue."
@@ -89,9 +28,7 @@ The solution is *Bored*: a lightweight, context-aware iOS mobile application tha
 
 Instead of presenting an overwhelming list of options, the app utilizes a swipeable activity board to present one highly relevant activity at a time. By additionally allowing to bookmark activities and create custom ones, the app enables users to come back to their favorite ideas over time. This deliberate friction-free design bypasses analysis paralysis, turning a tiring search for ideas into an immediate, seemless experience.
 
-### Requirements
-
-#### Functional Requirements (User Stories)
+#### User Stories
 
 - As a bored user, I want to get an immediate random activity suggestion once I open the app, so I don't have to think of one myself.
 
@@ -111,24 +48,39 @@ Instead of presenting an overwhelming list of options, the app utilizes a swipea
 
 - As a user with limited internet, I want to see a clear error message if the API fails so that I know why the app isn't loading a new idea.
 
-#### Requirement Coverage Snapshot
+### Architecture
 
-- **At least 5 SwiftUI views in separate files with `#Preview`:** implemented in `Bored/Views/ActivityBoardView.swift`, `Bored/Views/BookmarkView.swift`, `Bored/Views/CreateActivityView.swift`, `Bored/Views/FilterSettingsView.swift`, `Bored/Views/ActivityCardView.swift`, `Bored/Views/FetchFailedCardView.swift`, `Bored/Views/ErrorRefreshView.swift`, and `Bored/Views/EndOfFeedCardView.swift`.
-- **Runtime data-driven UI (`ForEach`/`List`):**
-    - `ActivityBoardView` renders cards from API-fetched runtime data via `ForEach(Array(viewModel.activityHistory.enumerated()), ...)`.
-    - `BookmarkView` renders persisted/user-created runtime data via `List` + `ForEach(bookmarkViewModel.activeCategories, ...)` and `ForEach(items)`.
-- **At least 2 navigable screens:** `ActivityBoardView` and `BookmarkView` are separate screens connected by `NavigationStack` + `NavigationLink`.
-- **State-management architecture:** heavy logic is implemented in `@Observable` classes (`ActivityBoardViewModel`, `BookmarkViewModel`), while Views focus on layout/navigation/simple UI state (`@State`, `.sheet`, `.task`).
-- **Networking requirement:** fulfilled in `Bored/Services/BoredAPIService.swift` with async/await `URLSession.shared.data(from:)` against a public API.
-- **Persistence requirement:** meaningful user data (bookmarked and custom-created activities) is persisted in `UserDefaults` through `Bored/Services/LocalStorageService.swift` and survives app restarts.
-- **Loading and error UX:** loading indicators are shown with `ProgressView`, and failures are displayed with user-friendly copy via `ErrorRefreshView`, `FetchFailedCardView`, and `APIError.localizedDescription`.
-- **No networking in Views:** `URLSession` and decoding logic are isolated to the service layer (`BoredAPIService`), not in SwiftUI Views.
-- **Logging requirement:** `os.Logger` categories are implemented in `Bored/Utils/Logger+Extensions.swift` and used in services and view models.
-- **SPM package requirement:** Swift Package Manager dependencies are configured in `project.yml`. One external SPM packaged ([ConfettiSwiftUI](https://github.com/simibac/ConfettiSwiftUI.git)) was added to improve user experience.
+#### Glossary (Abbott's Analysis)
 
-#### Quality Attributes & External Constraints
+| Term | Definition |
+| :--- | :--- |
+| **Activity Board** | The primary interface for user's interactions with the app. A **lightweight** swipeable feed that **presents** users **randomized, immediate** free-time activity suggestions. Users can **swipe** to browse through options sequentially, **create** their own activities and **save** their favorites for later. |
+| **Activity** | A discrete, fulfilling action (e.g., DIY project, park visit) **presented** to the user as a suggestion. These are designed to be **context-aware**, ensuring interactions remain relevant to the user’s current situation. Once **bookmarked**, an activity is persisted on the device, enabling the user to come back and **view saved** activities across sessions. |
+| **Filter Settings** | User-defined parameters (e.g., Category, Group size, Duration, Difficulty level) used as constraints to **filter out** irrelevant suggestions and ensure the suggestions provided are **context-aware**. |
 
-##### Human Interface Guidelines (HIG)
+#### Analysis Object Model (UML Class Diagram)
+
+![Analysis Object Model](diagrams/aom.png)
+
+#### Subsystem Decomposition (UML Component Diagram)
+
+![Subsystem Decomposition](diagrams/subsystem_decomposition.png)
+
+- **Bored App UI** — renders the app's user interface and handles user interactions across four distinct screens.
+    - **Activity Feed View:** displays the main swipeable feed with activity suggestions and corresponding bookmark buttons; gets the activity data from the Activity Management.
+    - **Activity Creation View:** displays the necessary input fields to create a new activity; gets the activity model from the Activity Management.
+    - **Filter Settings View:** displays the necessary input fields to set/clear activity search parameters; gets the filter model from the Filter Management.
+    - **Bookmark View:** displays the list of persisted bookmarked activities; gets the bookmark data from the Bookmark Management.
+- **Bored App Server** — acts as the core business logic handler, coordinating activity feeds, managing filter states, and handling both the retrieval and creation of bookmarks. 
+    - **Filter Management**: enables setting and clearing activity search parameters (filters) in the internal model and propagates them to the Activity Management through the Filter Service.
+    - **Activity Management:** consumes the Filter Service and applies the filters to the activity fetching logic; sends requests to the Bored API using a REST/JSON interface to query activities; propagates bookmarked and newly created activities to the Bookmark Management through the Bookmark Service.
+    - **Bookmark Management:** manages the list of bookmarked activities and persists them in local storage at the end of each session; reads the list from local storage at the beginning of the session.
+- **Network** - manages all external communication, specifically fetching random activities from the Bored API, which responds to the Activity Management's HTTP REST queries and returns activity data in JSON format.
+- **Local Storage** - handles the local, persistent storage of the user's saved bookmarks, including custom-created activities; receives read, write, and delete commands along with bookmark data from the Bookmark Management component.
+
+### Requirements
+
+#### Human Interface Guidelines (HIG)
 
 - **What I did:**
     - Used `NavigationStack` for clear hierarchy and `NavigationLink` for navigation from the main feed to saved activities.
@@ -145,7 +97,7 @@ Instead of presenting an overwhelming list of options, the app utilizes a swipea
     - Add dedicated VoiceOver walkthrough documentation and Dynamic Type XXL screenshots.
     - Add a confirmation step for destructive delete actions.
 
-##### Dark Mode
+#### Dark Mode
 
 - **What I did:**
     - Used semantic/adaptive colors in key views: `Color(.systemBackground)`, `Color(.secondarySystemBackground)`, `.foregroundStyle(.primary)`, and `.foregroundStyle(.secondary)`.
@@ -160,7 +112,7 @@ Instead of presenting an overwhelming list of options, the app utilizes a swipea
 - **Follow-up work:**
     - Run a contrast audit and tune a few saturated accents for even better readability in dark mode.
 
-##### Persistence
+#### Persistence
 
 - **What I did:**
     - Persisted meaningful user data: both bookmarked API activities and user-created activities.
@@ -173,7 +125,7 @@ Instead of presenting an overwhelming list of options, the app utilizes a swipea
 - **Follow-up work:**
     - Migrate bookmarks to SwiftData to support richer local queries and future model migrations.
 
-##### Responsiveness
+#### Responsiveness
 
 - **What I did:**
     - Used async/await networking in `BoredAPIService`, which keeps fetch work off the main thread.
@@ -187,7 +139,7 @@ Instead of presenting an overwhelming list of options, the app utilizes a swipea
 - **Follow-up work:**
     - Add cancellation/debouncing for very fast filter changes and profile request latency with signposts.
 
-##### Error Handling
+#### Error Handling
 
 - **What I did:**
     - Centralized error semantics in `APIError` with user-facing `LocalizedError` strings.
@@ -202,7 +154,7 @@ Instead of presenting an overwhelming list of options, the app utilizes a swipea
 - **Follow-up work:**
     - Add an offline fallback cache for the last successful feed page.
 
-##### Logging
+#### Logging
 
 - **What I did:**
     - Implemented structured logging with `os.Logger` and feature categories (`network`, `logic`) in a shared extension.
@@ -216,7 +168,7 @@ Instead of presenting an overwhelming list of options, the app utilizes a swipea
     - Enrich logs with request duration and filter metadata for easier production diagnostics.
     - Save logs in JSON format to enable formal querying in the future.
 
-##### Code Quality
+#### Code Quality
 
 - **What I did:**
     - Kept networking/decoding outside Views and inside services/view models to preserve separation of concerns.
@@ -235,7 +187,7 @@ Instead of presenting an overwhelming list of options, the app utilizes a swipea
 - **Follow-up work:**
     - Add unit tests for `BoredAPIService` response sanitization and `BookmarkViewModel` reorder/delete logic.
 
-##### Responsible AI Usage
+#### Responsible AI Usage
 
 - **Gemini (Pro Model via Web UI):** 
     - **What I used it for:** advanced UI refactoring, specifically resolving tricky layout bugs related to SwiftUI `TabView` interactions inside sheets and `ZStack` floating headers. Also used it to format SwiftLint `closure_body_length` violations by abstracting UI components into variables.
@@ -243,37 +195,3 @@ Instead of presenting an overwhelming list of options, the app utilizes a swipea
 - **GitHub Copilot Chat (GPT-5.3-Codex):**
     - **What I used it for:** improving this README with concrete implementation mapping.
     - **How I made sure it was correct:** manually reviewed each suggested diff.
-
----
-
-#### Glossary (Abbott's Analysis)
-
-| Term | Definition |
-| :--- | :--- |
-| **Activity Board** | The primary interface for user's interactions with the app. A **lightweight** swipeable feed that **presents** users **randomized, immediate** free-time activity suggestions. Users can **swipe** to browse through options sequentially, **create** their own activities and **save** their favorites for later. |
-| **Activity** | A discrete, fulfilling action (e.g., DIY project, park visit) **presented** to the user as a suggestion. These are designed to be **context-aware**, ensuring interactions remain relevant to the user’s current situation. Once **bookmarked**, an activity is persisted on the device, enabling the user to come back and **view saved** activities across sessions. |
-| **Filter Settings** | User-defined parameters (e.g., Category, Group size, Duration, Difficulty level) used as constraints to **filter out** irrelevant suggestions and ensure the suggestions provided are **context-aware**. |
-
----
-
-#### Analysis Object Model
-
-![Analysis Object Model](diagrams/aom.png)
-
-### Architecture
-
-#### Subsystem Decomposition
-
-![Subsystem Decomposition](diagrams/subsystem_decomposition.png)
-
-- **Bored App UI** — renders the app's user interface and handles user interactions across four distinct screens.
-    - **Activity Feed View:** displays the main swipeable feed with activity suggestions and corresponding bookmark buttons; gets the activity data from the Activity Management.
-    - **Activity Creation View:** displays the necessary input fields to create a new activity; gets the activity model from the Activity Management.
-    - **Filter Settings View:** displays the necessary input fields to set/clear activity search parameters; gets the filter model from the Filter Management.
-    - **Bookmark View:** displays the list of persisted bookmarked activities; gets the bookmark data from the Bookmark Management.
-- **Bored App Server** — acts as the core business logic handler, coordinating activity feeds, managing filter states, and handling both the retrieval and creation of bookmarks. 
-    - **Filter Management**: enables setting and clearing activity search parameters (filters) in the internal model and propagates them to the Activity Management through the Filter Service.
-    - **Activity Management:** consumes the Filter Service and applies the filters to the activity fetching logic; sends requests to the Bored API using a REST/JSON interface to query activities; propagates bookmarked and newly created activities to the Bookmark Management through the Bookmark Service.
-    - **Bookmark Management:** manages the list of bookmarked activities and persists them in local storage at the end of each session; reads the list from local storage at the beginning of the session.
-- **Network** - manages all external communication, specifically fetching random activities from the Bored API, which responds to the Activity Management's HTTP REST queries and returns activity data in JSON format.
-- **Local Storage** - handles the local, persistent storage of the user's saved bookmarks, including custom-created activities; receives read, write, and delete commands along with bookmark data from the Bookmark Management component.
